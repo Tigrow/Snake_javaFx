@@ -5,9 +5,7 @@ public class Main {
         int x = 10;
         System.out.println("Hello new branch :D");
         System.out.println(x);
-        for(int i = 0;i<=10;i++){
-            System.out.print("it's new Integer:");
-            System.out.print(i);
-        }
+        for(int i = 0;i<=10;i++)
+            System.out.println("New int"+Integer.toString(i));
     }
 }
