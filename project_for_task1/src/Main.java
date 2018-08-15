@@ -11,6 +11,5 @@ public class Main {
             System.out.println("New int"+Integer.toString(i));
             list.add(i);
         }
-        System.out.println(list.size());
     }
 }
