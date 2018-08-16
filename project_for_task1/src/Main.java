@@ -8,10 +8,11 @@ public class Main {
         System.out.println("Hello new branch :D");
         System.out.println(y);
         for(int i = 0;i<=10;i++){
-            System.out.println("New int"+Integer.toString(i));
+            System.out.println("New int"+Double.toString((double)i));
             list.add(i);
         }
-		System.out.println("Size of list =");
-		System.out.print(list.size());
+    }
+    private double getResult(double c){
+        return Math.sqrt(c*25+c/25);
     }
 }
