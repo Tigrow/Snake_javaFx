@@ -1,7 +1,5 @@
 package snake.model.elements;
 
-import javafx.geometry.Point2D;
-
 import java.awt.*;
 
 public abstract class Element {
@@ -11,7 +9,8 @@ public abstract class Element {
         this.position = position;
     }
     public void setPosition(Point position){
-        this.position = position;
+        this.position.x = position.x;
+        this.position.y = position.y;
     }
 
     public Point getPosition() {
