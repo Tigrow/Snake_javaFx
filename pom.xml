@@ -11,11 +11,9 @@
         <maven.compiler.target>1.7</maven.compiler.target>
         <maven.compiler.source>1.7</maven.compiler.source>
     </properties>
-
     <build>
         <finalName>Snake</finalName>
         <plugins>
-            <!-- Set a JDK compiler level -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -25,21 +23,17 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
-
-            <!-- Make this jar executable -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
                         <manifest>
-                            <!-- Jar file entry point -->
                             <mainClass>snake.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
             </plugin>
-
         </plugins>
         <resources>
             <resource>
@@ -48,11 +42,5 @@
                 <filtering>false</filtering>
             </resource>
         </resources>
-
-
     </build>
-
-
-
-
 </project>
