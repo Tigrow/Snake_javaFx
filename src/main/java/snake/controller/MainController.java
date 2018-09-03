@@ -1,11 +1,11 @@
 package snake.controller;
 
 import javafx.event.ActionEvent;
-import javafx.scene.Group;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.paint.Color;
 import snake.model.World;
 import snake.model.elements.Body;
 import snake.model.elements.Element;
@@ -14,15 +14,17 @@ import snake.model.elements.Tail;
 
 import java.util.HashMap;
 
+
+
 public class MainController {
-    public Group group;
     public Label labelScore;
+    public Pane pane;
     private World world;
     private Element[][] elements;
     private HashMap<Element,Circle> map;
     private static final int CELL_SIZE = 20;
-    private static final int HEIGHT_SIZE = 50;
-    private static final int WIDTH_SIZE = 50;
+    private static final int HEIGHT_SIZE = 20;
+    private static final int WIDTH_SIZE = 20;
 
     public void onActionStartButton(ActionEvent actionEvent) {
         Rectangle rectangle = new Rectangle();
@@ -31,7 +33,7 @@ public class MainController {
         rectangle.setWidth(CELL_SIZE * WIDTH_SIZE);
         rectangle.setHeight(CELL_SIZE * HEIGHT_SIZE);
         rectangle.setFill(Color.BLACK);
-        group.getChildren().add(rectangle);
+        pane.getChildren().add(rectangle);
 
 
         elements = new Element[WIDTH_SIZE][HEIGHT_SIZE];
@@ -46,21 +48,21 @@ public class MainController {
                        circle.setLayoutX(x*CELL_SIZE + CELL_SIZE/2);
                        circle.setLayoutY(y*CELL_SIZE + CELL_SIZE/2);
                        map.put(elements[x][y],circle);
-                       group.getChildren().add(circle);
+                       pane.getChildren().add(circle);
                    }else if(elements[x][y] instanceof Tail){
                        Circle circle = new Circle((double) CELL_SIZE/4);
                        circle.setFill(Color.YELLOW);
                        circle.setLayoutX(x*CELL_SIZE + CELL_SIZE/2);
                        circle.setLayoutY(y*CELL_SIZE + CELL_SIZE/2);
                        map.put(elements[x][y],circle);
-                       group.getChildren().add(circle);
+                       pane.getChildren().add(circle);
                    }else if(elements[x][y] instanceof Body){
                        Circle circle = new Circle((double) CELL_SIZE/3);
                        circle.setFill(Color.YELLOW);
                        circle.setLayoutX(x*CELL_SIZE + CELL_SIZE/2);
                        circle.setLayoutY(y*CELL_SIZE + CELL_SIZE/2);
                        map.put(elements[x][y],circle);
-                       group.getChildren().add(circle);
+                       pane.getChildren().add(circle);
                    }
                }
            }
