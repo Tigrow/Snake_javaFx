@@ -1,8 +1,6 @@
 package snake.model.elements;
 
-import javafx.geometry.Point2D;
-
-import java.awt.*;
+import java.awt.Point;
 
 public class Head extends Element {
 
