@@ -1,7 +1,7 @@
 package snake.controller;
 
 public interface IMainController {
-  public void updateMap();
+  void updateMap();
 
-  public void setScore(int score);
+  void setScore(int score);
 }
