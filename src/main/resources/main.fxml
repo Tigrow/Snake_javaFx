@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="snake.controller.MainController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="snake.controller.MainController">
     <HBox>
         <Button mnemonicParsing="false" onAction="#onActionStartButton" text="Start" HBox.hgrow="ALWAYS">
             <HBox.margin>
@@ -18,7 +18,7 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </padding>
         </Button>
-        <Button mnemonicParsing="false" onAction="#move" text="Button">
+        <Button mnemonicParsing="false" text="Stop">
             <HBox.margin>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </HBox.margin>
@@ -44,7 +44,7 @@
         </Label>
     </HBox>
     <Separator prefWidth="200.0" />
-   <Pane fx:id="pane" onMouseClicked="#OnMouseClickedPane">
+   <Pane fx:id="pane" onMouseClicked="#onMouseClickedPane">
       <VBox.margin>
          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
       </VBox.margin>
