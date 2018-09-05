@@ -1,37 +1,33 @@
-package snake.controller;
+package snake.view;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import snake.Main;
-import snake.model.World;
-import snake.model.elements.Body;
+import snake.controller.Controller;
+import snake.controller.IControllerView;
 import snake.model.elements.Element;
-import snake.model.elements.Head;
-import snake.model.elements.Tail;
 
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
 
-public class MainController implements Initializable, IMainController {
+public class MainView implements Initializable, IMainView {
+  private static final int CELL_SIZE = 20;
   public Label labelScore;
   public Pane pane;
-  private World world;
-  private Element[][] elements;
   private HashMap<Element, Circle> map;
-  private static final int CELL_SIZE = 20;
+  private IControllerView controller;
+
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    Rectangle rectangle = new Rectangle();
+    controller = new Controller();
+    controller.init(this);
+    /*Rectangle rectangle = new Rectangle();
     rectangle.setX(0);
     rectangle.setY(0);
     rectangle.setWidth(CELL_SIZE * Main.WIDTH_SIZE);
@@ -39,9 +35,9 @@ public class MainController implements Initializable, IMainController {
     rectangle.setFill(Color.BLACK);
     pane.getChildren().add(rectangle);
 
-    elements = new Element[Main.WIDTH_SIZE][Main.HEIGHT_SIZE];
     map = new HashMap<>();
-    world = new World(elements,this);
+    world = new World(this);
+    elements = world.getElements();
     for (int x = 0; x < Main.WIDTH_SIZE; x++) {
       for (int y = 0; y < Main.HEIGHT_SIZE; y++) {
         if (elements[x][y] != null) {
@@ -69,11 +65,11 @@ public class MainController implements Initializable, IMainController {
           }
         }
       }
-    }
+    }*/
   }
 
   public void onActionStartButton(ActionEvent actionEvent) {
-    world.startGame();
+    //world.startGame();
   }
 
   public void onMouseClickedPane(MouseEvent mouseEvent) {
@@ -85,8 +81,13 @@ public class MainController implements Initializable, IMainController {
   }
 
   @Override
+  public void showGameOver() {
+
+  }
+
+  @Override
   public void updateMap() {
-    Platform.runLater(new Runnable() {
+    /*Platform.runLater(new Runnable() {
       @Override
       public void run() {
         for (int x = 0; x < Main.WIDTH_SIZE; x++) {
@@ -99,6 +100,6 @@ public class MainController implements Initializable, IMainController {
           }
         }
       }
-    });
+    });*/
   }
 }
