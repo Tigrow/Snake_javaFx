@@ -1,22 +1,25 @@
 package snake.model;
 
-import snake.controller.IMainController;
+import snake.Main;
+import snake.Properties;
+import snake.controller.IControllerModel;
+import snake.model.elements.Death;
 import snake.model.elements.Element;
 
-import java.awt.Point;
+import java.awt.*;
 
 public class World implements IWorld {
   private Element[][] elements;
   private Snake snake;
   private boolean isRunned;
-  private IMainController controller;
   private Thread snakeThread;
+  private IControllerModel controller;
 
-  public World(Element[][] elements, IMainController controller) {
+  public World(IControllerModel controller) {
     this.controller = controller;
-    this.elements = elements;
-
-    snake = new Snake(10, this);
+    //this.controller = controller;
+    elements = new Element[Main.properties.widthSize][Main.properties.heightSize];
+    snake = new Snake(Main.properties.snakeSize, this);
 
     snakeThread = new Thread(new Runnable() {
       @Override
@@ -25,7 +28,7 @@ public class World implements IWorld {
           snake.move();
           update();
           try {
-            Thread.sleep(500);
+            Thread.sleep(200);
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
@@ -33,6 +36,10 @@ public class World implements IWorld {
       }
     });
     snakeThread.setDaemon(true);
+  }
+
+  public Element[][] getElements() {
+    return elements;
   }
 
   public void startGame() {
@@ -44,18 +51,21 @@ public class World implements IWorld {
     controller.updateMap();
   }
 
-  private boolean isEndWorld(Point point) {
-    return (elements.length > point.x && elements[0].length > point.y);
-  }
-
   @Override
-  public boolean moveElement(Element element, Point oldPoint) {
-    boolean moved;
-    if (moved = isEndWorld(element.getPosition())) {
+  public Element moveElement(Element element, Point oldPoint) {
+    if (canMoveTo(element.getPosition())) {
       elements[oldPoint.x][oldPoint.y] = null;
       addElement(element);
     }
-    return moved;
+    return new Death(element.getPosition());
+   /* if (!isEndWorld(element.getPosition())) {
+      elements[oldPoint.x][oldPoint.y] = null;
+      addElement(element);
+    } else {
+      isRunned = false;
+      view.showGameOver();
+    }
+    return !isEndWorld(element.getPosition());*/
   }
 
 
@@ -64,8 +74,15 @@ public class World implements IWorld {
     elements[element.getPosition().x][element.getPosition().y] = element;
   }
 
-  @Override
-  public boolean isEmptyPosition(Point point) {
-    return elements[point.x][point.y] == null;
+  Element getElementByPosition(Point point) {
+    if (canMoveTo(point)) {
+      return elements[point.x][point.y];
+    } else {
+      return new Death(point);
+    }
+  }
+
+  private boolean canMoveTo(Point point) {
+    return (point.x < Main.properties.widthSize && point.y < Main.properties.heightSize);
   }
 }

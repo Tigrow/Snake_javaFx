@@ -32,7 +32,7 @@ class Snake {
     Point oldTailPoint = (Point) tail.getPosition().clone();
     Point oldBodyPoint = (Point) bodyList.getLast().getPosition().clone();
     head.getPosition().translate(0, 1);
-    if (world.moveElement(head, oldHeadPoint)) {
+    world.moveElement(head, oldHeadPoint );
       if (!bodyList.isEmpty()) {
         bodyList.addFirst(bodyList.getLast());
         bodyList.getFirst().setPosition(oldHeadPoint);
@@ -41,6 +41,6 @@ class Snake {
       }
       tail.setPosition(oldBodyPoint);
       world.moveElement(tail, oldTailPoint);
-    }
+
   }
 }

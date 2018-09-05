@@ -4,10 +4,11 @@ import snake.model.elements.Element;
 
 import java.awt.*;
 
-interface IWorld {
-  boolean moveElement(Element element, Point oldPoint);
+public interface IWorld {
+  /*
+  * TODO переписать данный интерфейс
+  * */
+  Element moveElement(Element element, Point oldPoint);
 
   void addElement(Element element);
-
-  boolean isEmptyPosition(Point point);
 }
