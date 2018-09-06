@@ -1,13 +1,12 @@
 package snake.model;
 
-import snake.model.elements.Element;
+import snake.model.elements.Direction;
 
-import java.awt.*;
+public interface IWorld {
 
-interface IWorld {
-  boolean moveElement(Element element, Point oldPoint);
+  void startGame();
 
-  void addElement(Element element);
+  void changeDirection(Direction direction);
 
-  boolean isEmptyPosition(Point point);
+  void StopGame();
 }

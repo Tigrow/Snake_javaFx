@@ -5,18 +5,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import snake.view.MainView;
 
 
 public class Main extends Application {
-  public static int HEIGHT_SIZE = 20;
-  public static int WIDTH_SIZE = 20;
+
+  public static Properties properties;
 
   public static void main(String[] args) {
+    properties = new Properties();
     for (int i = 0; i < args.length; i++) {
       if (args[i].contains("-size=")) {
         String size[] = args[i].split("=")[1].split("x");
-        WIDTH_SIZE = Integer.parseInt(size[0]);
-        HEIGHT_SIZE = Integer.parseInt(size[1]);
+        //Properties.WIDTH_SIZE = Integer.parseInt(size[0]);
+        //Properties.HEIGHT_SIZE = Integer.parseInt(size[1]);
       }
     }
     launch(args);
@@ -24,9 +26,18 @@ public class Main extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    Parent root = FXMLLoader.load(getClass().getResource("resources/main.fxml"));
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("resources/main.fxml"));
+    Parent root = loader.load();
     primaryStage.setTitle("Snake");
     primaryStage.setScene(new Scene(root));
     primaryStage.show();
+    MainView mainView = (MainView) loader.getController();
+
+    /*
+    Controller controller = new Controller();
+    World world = new World(properties, controller);
+    controller.setMainView(mainView);
+    controller.setWorld(world);
+    mainView.setController(controller);*/
   }
 }

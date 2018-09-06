@@ -1,22 +1,31 @@
 package snake.model;
 
-import snake.controller.IMainController;
+import snake.Main;
+import snake.controller.IControllerModel;
+import snake.model.elements.Death;
+import snake.model.elements.Direction;
 import snake.model.elements.Element;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
-public class World implements IWorld {
+public class World implements IWorld, IWorldAnimal {
   private Element[][] elements;
   private Snake snake;
   private boolean isRunned;
-  private IMainController controller;
   private Thread snakeThread;
+  private IControllerModel controller;
+  private List<Element> addElements;
+  private List<Element> deleteElements;
+  private List<Element> moveElements;
+  private Direction dir = Direction.None;
 
-  public World(Element[][] elements, IMainController controller) {
+  public World(IControllerModel controller) {
     this.controller = controller;
-    this.elements = elements;
-
-    snake = new Snake(10, this);
+    initLists();
+    elements = new Element[Main.properties.widthSize][Main.properties.heightSize];
+    snake = new Snake(Main.properties.snakeSize, this);
 
     snakeThread = new Thread(new Runnable() {
       @Override
@@ -25,7 +34,7 @@ public class World implements IWorld {
           snake.move();
           update();
           try {
-            Thread.sleep(500);
+            Thread.sleep(200);
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
@@ -33,39 +42,73 @@ public class World implements IWorld {
       }
     });
     snakeThread.setDaemon(true);
+    controller.setSceen(Main.properties.widthSize, Main.properties.heightSize);
+    update();
   }
 
+  void update() {
+    controller.updateAll(addElements, deleteElements, moveElements);
+    initLists();
+  }
+
+  private void initLists() {
+    addElements = new ArrayList<>();
+    deleteElements = new ArrayList<>();
+    moveElements = new ArrayList<>();
+  }
+
+  @Override
+  public void snakeDeath() {
+    isRunned = false;
+  }
+
+  @Override
+  public Direction getDirection() {
+    return dir;
+  }
+
+  @Override
   public void startGame() {
     isRunned = true;
     snakeThread.start();
   }
 
-  private void update() {
-    controller.updateMap();
-  }
-
-  private boolean isEndWorld(Point point) {
-    return (elements.length > point.x && elements[0].length > point.y);
+  @Override
+  public void changeDirection(Direction direction) {
+    dir = direction;
   }
 
   @Override
-  public boolean moveElement(Element element, Point oldPoint) {
-    boolean moved;
-    if (moved = isEndWorld(element.getPosition())) {
+  public void StopGame() {
+
+  }
+
+  @Override
+  public void moveElement(Element element, Point oldPoint) {
+    if (canMoveTo(element.getPosition())) {
       elements[oldPoint.x][oldPoint.y] = null;
-      addElement(element);
+      elements[element.getPosition().x][element.getPosition().y] = element;
+      moveElements.add(element);
     }
-    return moved;
   }
 
 
   @Override
   public void addElement(Element element) {
     elements[element.getPosition().x][element.getPosition().y] = element;
+    addElements.add(element);
   }
 
   @Override
-  public boolean isEmptyPosition(Point point) {
-    return elements[point.x][point.y] == null;
+  public Element getElementByPosition(Point point) {
+    if (canMoveTo(point)) {
+      return elements[point.x][point.y];
+    } else {
+      return new Death(point);
+    }
+  }
+
+  private boolean canMoveTo(Point point) {
+    return (point.x < Main.properties.widthSize && point.y < Main.properties.heightSize && point.x >= 0 && point.y >= 0);
   }
 }
