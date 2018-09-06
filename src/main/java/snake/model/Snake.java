@@ -1,8 +1,6 @@
 package snake.model;
 
-import snake.model.elements.Body;
-import snake.model.elements.Head;
-import snake.model.elements.Tail;
+import snake.model.elements.*;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -11,9 +9,10 @@ class Snake {
   private Head head;
   private Tail tail;
   private LinkedList<Body> bodyList;
-  private IWorld world;
+  private IWorldAnimal world;
+  private Point dir = new Point(0, 1);
 
-  Snake(int lenght, IWorld world) {
+  Snake(int lenght, IWorldAnimal world) {
     this.world = world;
     bodyList = new LinkedList<>();
     tail = new Tail(new Point(0, 0));
@@ -31,8 +30,10 @@ class Snake {
     Point oldHeadPoint = (Point) head.getPosition().clone();
     Point oldTailPoint = (Point) tail.getPosition().clone();
     Point oldBodyPoint = (Point) bodyList.getLast().getPosition().clone();
-    head.getPosition().translate(0, 1);
-    world.moveElement(head, oldHeadPoint );
+    changeDirection();
+    head.getPosition().translate(dir.x, dir.y);
+    if (collision(world.getElementByPosition(head.getPosition()))) {
+      world.moveElement(head, oldHeadPoint);
       if (!bodyList.isEmpty()) {
         bodyList.addFirst(bodyList.getLast());
         bodyList.getFirst().setPosition(oldHeadPoint);
@@ -41,6 +42,32 @@ class Snake {
       }
       tail.setPosition(oldBodyPoint);
       world.moveElement(tail, oldTailPoint);
+    }
+  }
 
+  boolean collision(Element element) {
+    if (element instanceof Death) {
+      world.snakeDeath();
+      return false;
+    } else if (element instanceof Body) {
+      world.snakeDeath();
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  private void changeDirection() {
+    if (world.getDirection() == Direction.Left) {
+      Point oldDir = (Point) dir.clone();
+      dir.x = oldDir.x * 0 + oldDir.y * 1;
+      dir.y = oldDir.x * -1 + oldDir.y * 0;
+      world.changeDirection(Direction.None);
+    } else if (world.getDirection() == Direction.Right) {
+      Point oldDir = (Point) dir.clone();
+      dir.x = oldDir.x * 0 + oldDir.y * -1;
+      dir.y = oldDir.x * 1 + oldDir.y * 0;
+      world.changeDirection(Direction.None);
+    }
   }
 }
