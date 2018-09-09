@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 
 
 public class MainView implements Initializable, IMainView {
-  private static final int CELL_SIZE = 20;
+  private static final int CELL_SIZE = 15;
   public Label labelScore;
   public Pane pane;
   public Button startButton;
@@ -68,18 +68,20 @@ public class MainView implements Initializable, IMainView {
 
   @Override
   public void moveElement(final List<Element> list) {
-    /*Platform.runLater(new Runnable() {
+    Platform.runLater(new Runnable() {
       @Override
       public void run() {
-
-      }
-    });*/
     for (int i = 0; i < list.size(); i++) {
       Element element = list.get(i);
       Circle circle = map.get(element);
+      if(circle == null){
+        circle = getCircleByElements(element);
+      }
       circle.setLayoutX(element.getPosition().x * CELL_SIZE + CELL_SIZE / 2);
       circle.setLayoutY(element.getPosition().y * CELL_SIZE + CELL_SIZE / 2);
     }
+      }
+    });
   }
 
   @Override
@@ -99,8 +101,13 @@ public class MainView implements Initializable, IMainView {
   }
 
   @Override
-  public void setScore(int score) {
-    labelScore.setText(Integer.toString(score));
+  public void setScore(final int score) {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        labelScore.setText(Integer.toString(score));
+      }
+    });
   }
 
   @Override
@@ -129,6 +136,9 @@ public class MainView implements Initializable, IMainView {
     } else if (element instanceof Body) {
       circle = new Circle((double) CELL_SIZE / 3);
       circle.setFill(Color.YELLOW);
+    } else if(element instanceof FrogBody){
+      circle = new Circle((double) CELL_SIZE /3);
+      circle.setFill(Color.GREEN);
     }
     return circle;
   }
