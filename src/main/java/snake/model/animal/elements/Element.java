@@ -9,6 +9,10 @@ public abstract class Element {
     this.position = position;
   }
 
+  public Element(){
+    this.position = new Point();
+  }
+
   public void setPosition(Point position) {
     this.position.x = position.x;
     this.position.y = position.y;
