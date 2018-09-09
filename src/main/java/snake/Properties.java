@@ -1,10 +1,10 @@
 package snake;
 
 public class Properties {
-  public int heightSize = 20;
-  public int widthSize = 20;
+  public int heightSize = 40;
+  public int widthSize = 40;
   public int snakeSize = 5;
-  public int frogNumber = 5;
+  private int frogNumber = 500;
 
   public int getHeightSize() {
     return heightSize;

@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import snake.view.MainView;
 
 
 public class Main extends Application {
@@ -31,13 +30,5 @@ public class Main extends Application {
     primaryStage.setTitle("Snake");
     primaryStage.setScene(new Scene(root));
     primaryStage.show();
-    MainView mainView = (MainView) loader.getController();
-
-    /*
-    Controller controller = new Controller();
-    World world = new World(properties, controller);
-    controller.setMainView(mainView);
-    controller.setWorld(world);
-    mainView.setController(controller);*/
   }
 }

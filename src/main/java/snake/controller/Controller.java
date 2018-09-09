@@ -2,8 +2,8 @@ package snake.controller;
 
 import snake.model.IWorld;
 import snake.model.World;
-import snake.model.elements.Direction;
-import snake.model.elements.Element;
+import snake.model.animal.elements.Direction;
+import snake.model.animal.elements.Element;
 import snake.view.IMainView;
 
 import java.util.List;

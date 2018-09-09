@@ -1,4 +1,4 @@
-package snake.model.elements;
+package snake.model.animal.elements;
 
 import java.awt.Point;
 

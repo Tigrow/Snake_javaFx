@@ -2,9 +2,9 @@ package snake.model;
 
 import snake.Main;
 import snake.controller.IControllerModel;
-import snake.model.elements.Death;
-import snake.model.elements.Direction;
-import snake.model.elements.Element;
+import snake.model.animal.FrogController;
+import snake.model.animal.Snake;
+import snake.model.animal.elements.*;
 
 import java.awt.Point;
 import java.util.ArrayList;

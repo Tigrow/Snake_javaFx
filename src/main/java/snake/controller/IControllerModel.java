@@ -1,6 +1,6 @@
 package snake.controller;
 
-import snake.model.elements.Element;
+import snake.model.animal.elements.Element;
 
 import java.util.List;
 

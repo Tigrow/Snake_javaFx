@@ -1,7 +1,6 @@
 package snake.view;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,10 +12,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import snake.controller.Controller;
 import snake.controller.IControllerView;
-import snake.model.elements.Body;
-import snake.model.elements.Element;
-import snake.model.elements.Head;
-import snake.model.elements.Tail;
+import snake.model.animal.elements.*;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -40,7 +36,7 @@ public class MainView implements Initializable, IMainView {
     controller.init(this);
   }
 
-  public void onActionStartButton(ActionEvent actionEvent) {
+  public void onActionStartButton() {
     controller.startGame();
   }
 
