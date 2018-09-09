@@ -7,15 +7,19 @@ import java.awt.Point;
 
 public interface IWorldAnimal {
 
-  void moveElement(Element element, Point oldPoint);
-
-  Element getElementByPosition(Point point);
+  boolean moveElement(Element element, Point newPosition);
 
   void addElement(Element element);
+
+  Element getElementByPosition(Point position);
 
   void snakeDeath();
 
   Direction getDirection();
+
+  void update();
+
+  boolean isRunned();
 
   void changeDirection(Direction direction);
 }
