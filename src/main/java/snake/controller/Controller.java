@@ -44,4 +44,14 @@ public class Controller implements IControllerModel, IControllerView {
     mainView.addElement(addElements);
     mainView.moveElement(moveElements);
   }
+
+  @Override
+  public void gameOver() {
+
+  }
+
+  @Override
+  public void updateScore(int score) {
+    mainView.setScore(score);
+  }
 }
