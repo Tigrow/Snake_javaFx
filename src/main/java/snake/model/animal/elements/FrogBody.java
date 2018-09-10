@@ -6,4 +6,8 @@ public class FrogBody extends Element {
   public FrogBody(Point position) {
     super(position);
   }
+
+  public FrogBody() {
+    super();
+  }
 }
