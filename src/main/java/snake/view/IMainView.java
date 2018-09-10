@@ -19,5 +19,9 @@ public interface IMainView {
 
   void disableStartButton();
 
-  void enableStartButtor();
+  void enableStartButton();
+
+  void disableStopButton();
+
+  void enableStopButton();
 }

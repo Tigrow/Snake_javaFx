@@ -25,6 +25,7 @@ public class MainView implements Initializable, IMainView {
   public Label labelScore;
   public Pane pane;
   public Button startButton;
+  public Button stopButton;
   private HashMap<Element, Circle> map;
   private IControllerView controller;
 
@@ -38,6 +39,10 @@ public class MainView implements Initializable, IMainView {
 
   public void onActionStartButton() {
     controller.startGame();
+  }
+
+  public void onActionStopButton() {
+    controller.stopGame();
   }
 
   public void onMouseClickedPane(MouseEvent mouseEvent) {
@@ -121,8 +126,18 @@ public class MainView implements Initializable, IMainView {
   }
 
   @Override
-  public void enableStartButtor() {
+  public void enableStartButton() {
     startButton.setDisable(false);
+  }
+
+  @Override
+  public void disableStopButton() {
+    stopButton.setDisable(true);
+  }
+
+  @Override
+  public void enableStopButton() {
+    stopButton.setDisable(false);
   }
 
   private Circle getCircleByElements(Element element) {
@@ -138,8 +153,9 @@ public class MainView implements Initializable, IMainView {
       circle.setFill(Color.YELLOW);
     } else if (element instanceof FrogBody) {
       circle = new Circle((double) CELL_SIZE / 3);
-      circle.setFill(Color.GREEN);
+      circle.setFill(Color.GREENYELLOW);
     }
     return circle;
   }
+
 }
