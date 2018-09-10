@@ -1,6 +1,6 @@
 package snake.model.animal.elements;
 
-import java.awt.*;
+import java.awt.Point;
 
 public abstract class Element {
   protected Point position;
@@ -9,7 +9,7 @@ public abstract class Element {
     this.position = position;
   }
 
-  public Element(){
+  public Element() {
     this.position = new Point();
   }
 

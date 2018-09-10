@@ -8,5 +8,5 @@ public interface IWorld {
 
   void changeDirection(Direction direction);
 
-  void StopGame();
+  void stopGame();
 }

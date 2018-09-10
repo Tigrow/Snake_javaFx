@@ -17,7 +17,7 @@ public interface IMainView {
 
   void showGameOver();
 
-  void DisableStartButton();
+  void disableStartButton();
 
-  void EnableStartButtor();
+  void enableStartButtor();
 }

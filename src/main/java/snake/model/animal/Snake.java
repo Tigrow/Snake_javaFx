@@ -7,13 +7,13 @@ import snake.model.animal.elements.*;
 import java.awt.Point;
 import java.util.LinkedList;
 
-public class Snake implements Runnable{
+public class Snake implements Runnable {
   private Properties properties;
   private IWorldAnimal world;
   private Head head;
   private Tail tail;
   private LinkedList<Body> bodyList;
-  private Point dir = new Point(0,1);
+  private Point dir = new Point(0, 1);
 
   public Snake(Properties properties, IWorldAnimal world) {
     this.properties = properties;
@@ -30,20 +30,20 @@ public class Snake implements Runnable{
     world.addElement(head);
   }
 
-    @Override
-    public void run() {
-        while (world.isRunned()) {
-            move();
-            world.update();
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+  @Override
+  public void run() {
+    while (world.isRunned()) {
+      move();
+      world.update();
+      try {
+        Thread.sleep(200);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     }
+  }
 
-  public void addBodySegment(){
+  public void addBodySegment() {
     Body body = new Body();
     bodyList.addLast(body);
     world.addElement(body);
@@ -54,14 +54,14 @@ public class Snake implements Runnable{
     Point newTailPosition = (Point) bodyList.getLast().getPosition().clone();
     Point newBodyPosition = (Point) head.getPosition().clone();
     changeDirection();
-    newHeadPosition.translate(dir.x,dir.y);
-    if(world.moveElement(head, newHeadPosition)){
-     if (!bodyList.isEmpty()) {
-      bodyList.addFirst(bodyList.getLast());
-      bodyList.removeLast();
-      world.moveElement(bodyList.getFirst(), newBodyPosition);
-     }
-     world.moveElement(tail, newTailPosition);
+    newHeadPosition.translate(dir.x, dir.y);
+    if (world.moveElement(head, newHeadPosition)) {
+      if (!bodyList.isEmpty()) {
+        bodyList.addFirst(bodyList.getLast());
+        bodyList.removeLast();
+        world.moveElement(bodyList.getFirst(), newBodyPosition);
+      }
+      world.moveElement(tail, newTailPosition);
     }
   }
 

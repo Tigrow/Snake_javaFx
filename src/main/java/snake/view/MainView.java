@@ -71,15 +71,15 @@ public class MainView implements Initializable, IMainView {
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
-    for (int i = 0; i < list.size(); i++) {
-      Element element = list.get(i);
-      Circle circle = map.get(element);
-      if(circle == null){
-        circle = getCircleByElements(element);
-      }
-      circle.setLayoutX(element.getPosition().x * CELL_SIZE + CELL_SIZE / 2);
-      circle.setLayoutY(element.getPosition().y * CELL_SIZE + CELL_SIZE / 2);
-    }
+        for (int i = 0; i < list.size(); i++) {
+          Element element = list.get(i);
+          Circle circle = map.get(element);
+          if (circle == null) {
+            circle = getCircleByElements(element);
+          }
+          circle.setLayoutX(element.getPosition().x * CELL_SIZE + CELL_SIZE / 2);
+          circle.setLayoutY(element.getPosition().y * CELL_SIZE + CELL_SIZE / 2);
+        }
       }
     });
   }
@@ -116,12 +116,12 @@ public class MainView implements Initializable, IMainView {
   }
 
   @Override
-  public void DisableStartButton() {
+  public void disableStartButton() {
     startButton.setDisable(true);
   }
 
   @Override
-  public void EnableStartButtor() {
+  public void enableStartButtor() {
     startButton.setDisable(false);
   }
 
@@ -136,8 +136,8 @@ public class MainView implements Initializable, IMainView {
     } else if (element instanceof Body) {
       circle = new Circle((double) CELL_SIZE / 3);
       circle.setFill(Color.YELLOW);
-    } else if(element instanceof FrogBody){
-      circle = new Circle((double) CELL_SIZE /3);
+    } else if (element instanceof FrogBody) {
+      circle = new Circle((double) CELL_SIZE / 3);
       circle.setFill(Color.GREEN);
     }
     return circle;

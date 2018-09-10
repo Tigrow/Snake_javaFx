@@ -8,41 +8,42 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class FrogController implements Runnable{
-    HashMap<Element,GreenFrog> frogs;
-    List<Element> frogBodyes;
-    IWorldAnimal world;
-    public FrogController(Properties properties, IWorldAnimal world) {
-        this.world = world;
-        frogs = new HashMap<>();
-        frogBodyes = new ArrayList<>();
-        for(int i = 0;i<properties.getFrogNumber();i++){
-            GreenFrog greenFrog = new GreenFrog(properties,world);
-            frogs.put(greenFrog.getFrogBody(),greenFrog);
-            frogBodyes.add(greenFrog.getFrogBody());
-        }
-    }
+public class FrogController implements Runnable {
+  private HashMap<Element, GreenFrog> frogs;
+  private List<Element> frogBodyes;
+  private IWorldAnimal world;
 
-    private void move() {
-        for(int i = 0;i<frogBodyes.size();i++){
-            frogs.get(frogBodyes.get(i)).move();
-        }
+  public FrogController(Properties properties, IWorldAnimal world) {
+    this.world = world;
+    frogs = new HashMap<>();
+    frogBodyes = new ArrayList<>();
+    for (int i = 0; i < properties.getFrogNumber(); i++) {
+      GreenFrog greenFrog = new GreenFrog(properties, world);
+      frogs.put(greenFrog.getFrogBody(), greenFrog);
+      frogBodyes.add(greenFrog.getFrogBody());
     }
+  }
 
-    public void resetPostion(Element element){
-        frogs.get(element).resetPossition();
+  private void move() {
+    for (int i = 0; i < frogBodyes.size(); i++) {
+      frogs.get(frogBodyes.get(i)).move();
     }
+  }
 
-    @Override
-    public void run() {
-        while (world.isRunned()) {
-            move();
-            world.update();
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+  public void resetPostion(Element element) {
+    frogs.get(element).resetPossition();
+  }
+
+  @Override
+  public void run() {
+    while (world.isRunned()) {
+      move();
+      world.update();
+      try {
+        Thread.sleep(10);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     }
+  }
 }

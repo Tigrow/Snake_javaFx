@@ -21,7 +21,7 @@ public class Controller implements IControllerModel, IControllerView {
   @Override
   public void startGame() {
     world.startGame();
-    mainView.DisableStartButton();
+    mainView.disableStartButton();
   }
 
   @Override

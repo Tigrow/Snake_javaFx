@@ -14,7 +14,7 @@ public class World implements IWorld, IWorldAnimal {
   private Element[][] elements;
   private Snake snake;
   private boolean isRunned = false;
-  private Thread snakeThread,frogThread;
+  private Thread snakeThread, frogThread;
   private IControllerModel controller;
   private List<Element> addElements, deleteElements, moveElements;
   private Direction dir = Direction.None;
@@ -26,7 +26,7 @@ public class World implements IWorld, IWorldAnimal {
     initLists();
     elements = new Element[Main.properties.widthSize][Main.properties.heightSize];
     snake = new Snake(Main.properties, this);
-    frogController = new FrogController(Main.properties,this);
+    frogController = new FrogController(Main.properties, this);
     frogThread = new Thread(frogController);
     frogThread.setDaemon(true);
     snakeThread = new Thread(snake);
@@ -74,13 +74,13 @@ public class World implements IWorld, IWorldAnimal {
   }
 
   @Override
-  public void StopGame() {
+  public void stopGame() {
 
   }
 
   @Override
   public boolean moveElement(Element element, Point newPosition) {
-    boolean move = collision(element,newPosition);
+    boolean move = collision(element, newPosition);
     if (move) {
       elements[element.getPosition().x][element.getPosition().y] = null;
       element.setPosition(newPosition);
@@ -112,26 +112,26 @@ public class World implements IWorld, IWorldAnimal {
             && point.y >= 0);
   }
 
-  private  boolean collision(Element element, Point newPosition){
+  private boolean collision(Element element, Point newPosition) {
     boolean isAlive = true;
     Element elementByPosition = getElementByPosition(newPosition);
-    if(element instanceof FrogBody) {
-      if(elementByPosition instanceof Death){
+    if (element instanceof FrogBody) {
+      if (elementByPosition instanceof Death) {
         isAlive = false;
-      }else if(elementByPosition !=null){
+      } else if (elementByPosition != null) {
         isAlive = false;
       }
     }
-    if(element instanceof Head){
-      if(elementByPosition instanceof Death){
+    if (element instanceof Head) {
+      if (elementByPosition instanceof Death) {
         isAlive = false;
         isRunned = false;
         controller.gameOver();
-      }else if(elementByPosition instanceof FrogBody){
+      } else if (elementByPosition instanceof FrogBody) {
         frogController.resetPostion(elementByPosition);
         snake.addBodySegment();
         scorePlus();
-      }else if (elementByPosition instanceof Body) {
+      } else if (elementByPosition instanceof Body) {
         isAlive = false;
         isRunned = false;
         controller.gameOver();
@@ -140,7 +140,7 @@ public class World implements IWorld, IWorldAnimal {
     return isAlive;
   }
 
-  private void scorePlus(){
+  private void scorePlus() {
     score++;
     controller.updateScore(score);
   }
