@@ -14,6 +14,7 @@ public class Snake implements Runnable {
   private Tail tail;
   private LinkedList<Body> bodyList;
   private Point dir = new Point(0, 1);
+  private int addBodyCount = 0;
 
   public Snake(Properties properties, IWorldAnimal world) {
     this.properties = properties;
@@ -21,12 +22,12 @@ public class Snake implements Runnable {
     this.bodyList = new LinkedList<>();
     tail = new Tail(new Point(0, 0));
     world.addElement(tail);
-    for (int i = 1; i <= properties.snakeSize - 2; i++) {
+    for (int i = 1; i <= properties.getSnakeSize() - 2; i++) {
       Body body = new Body(new Point(i, 0));
       bodyList.addFirst(body);
       world.addElement(body);
     }
-    head = new Head(new Point(properties.snakeSize - 1, 0));
+    head = new Head(new Point(properties.getSnakeSize() - 1, 0));
     world.addElement(head);
   }
 
@@ -36,7 +37,7 @@ public class Snake implements Runnable {
       move();
       world.update();
       try {
-        Thread.sleep(200);
+        Thread.sleep(properties.getSnakeSleep());
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
@@ -44,9 +45,7 @@ public class Snake implements Runnable {
   }
 
   public void addBodySegment() {
-    Body body = new Body();
-    bodyList.addLast(body);
-    world.addElement(body);
+    addBodyCount++;
   }
 
   private void move() {
@@ -56,12 +55,19 @@ public class Snake implements Runnable {
     changeDirection();
     newHeadPosition.translate(dir.x, dir.y);
     if (world.moveElement(head, newHeadPosition)) {
-      if (!bodyList.isEmpty()) {
-        bodyList.addFirst(bodyList.getLast());
-        bodyList.removeLast();
-        world.moveElement(bodyList.getFirst(), newBodyPosition);
+      if (addBodyCount != 0) {
+        Body body = new Body(newBodyPosition);
+        bodyList.addFirst(body);
+        world.addElement(body);
+        addBodyCount--;
+      } else {
+        if (!bodyList.isEmpty()) {
+          bodyList.addFirst(bodyList.getLast());
+          bodyList.removeLast();
+          world.moveElement(bodyList.getFirst(), newBodyPosition);
+        }
+        world.moveElement(tail, newTailPosition);
       }
-      world.moveElement(tail, newTailPosition);
     }
   }
 

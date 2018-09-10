@@ -12,9 +12,11 @@ public class FrogController implements Runnable {
   private HashMap<Element, GreenFrog> frogs;
   private List<Element> frogBodyes;
   private IWorldAnimal world;
+  private Properties properties;
 
   public FrogController(Properties properties, IWorldAnimal world) {
     this.world = world;
+    this.properties = properties;
     frogs = new HashMap<>();
     frogBodyes = new ArrayList<>();
     for (int i = 0; i < properties.getFrogNumber(); i++) {
@@ -40,7 +42,7 @@ public class FrogController implements Runnable {
       move();
       world.update();
       try {
-        Thread.sleep(10);
+        Thread.sleep(properties.getSnakeSleep() * 2);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }

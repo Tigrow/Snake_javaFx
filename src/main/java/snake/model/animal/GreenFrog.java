@@ -11,13 +11,13 @@ public class GreenFrog {
   private FrogBody frogBody;
   private IWorldAnimal world;
   private Properties properties;
+  private static Point[] mass = {new Point(1,0),new Point(0,1),new Point(-1,0),new Point(0,-1)};
 
   public GreenFrog(Properties properties, IWorldAnimal world) {
     this.world = world;
     this.properties = properties;
-    Random random = new Random();
-    frogBody = new FrogBody(new Point(random.nextInt(properties.widthSize), random.nextInt(properties.heightSize)));
-    world.addElement(frogBody);
+    frogBody = new FrogBody();
+    initFrog();
     /*
      * TODO: добавить проверку на позицию
      * */
@@ -30,25 +30,30 @@ public class GreenFrog {
   public void resetPossition() {
     Point newPosition = (Point) frogBody.getPosition().clone();
     Random random = new Random();
-    newPosition.setLocation(random.nextInt(properties.widthSize), random.nextInt(properties.heightSize));
+    newPosition.setLocation(random.nextInt(properties.getWidthSize()), random.nextInt(properties.getHeightSize()));
     world.moveElement(frogBody, newPosition);
   }
 
   public void move() {
     Random random = new Random();
-    Point dir = new Point(1, 0);
-    /*
-     * TODO что то не так с этим рандомом
-     * */
-    for (int i = 0; i < random.nextInt(4); i++) {
-      Point oldDir = (Point) dir.clone();
-      dir.x = oldDir.y * -1;
-      dir.y = oldDir.x * 1;
-    }
+    Point dir = mass[random.nextInt(mass.length)];
     Point newFrogPosition = (Point) frogBody.getPosition().clone();
     newFrogPosition.translate(dir.x, dir.y);
     if (!world.moveElement(frogBody, newFrogPosition)) {
       //move();
     }
+  }
+
+  private Point randomPosition() {
+    Random random = new Random();
+    return new Point(random.nextInt(properties.getWidthSize()), random.nextInt(properties.getHeightSize()));
+  }
+
+  private boolean initFrog() {
+    frogBody.setPosition(randomPosition());
+    if (!world.addElement(frogBody)) {
+      initFrog();
+    }
+    return true;
   }
 }

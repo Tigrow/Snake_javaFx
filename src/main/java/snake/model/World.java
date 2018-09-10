@@ -1,12 +1,12 @@
 package snake.model;
 
-import snake.Main;
+import snake.Properties;
 import snake.controller.IControllerModel;
 import snake.model.animal.FrogController;
 import snake.model.animal.Snake;
 import snake.model.animal.elements.*;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,19 +19,21 @@ public class World implements IWorld, IWorldAnimal {
   private List<Element> addElements, deleteElements, moveElements;
   private Direction dir = Direction.None;
   private FrogController frogController;
+  private Properties properties;
   private int score = 0;
 
-  public World(IControllerModel controller) {
+  public World(IControllerModel controller, Properties properties) {
     this.controller = controller;
+    this.properties = properties;
     initLists();
-    elements = new Element[Main.properties.widthSize][Main.properties.heightSize];
-    snake = new Snake(Main.properties, this);
-    frogController = new FrogController(Main.properties, this);
+    elements = new Element[properties.getWidthSize()][properties.getHeightSize()];
+    snake = new Snake(properties, this);
+    frogController = new FrogController(properties, this);
     frogThread = new Thread(frogController);
     frogThread.setDaemon(true);
     snakeThread = new Thread(snake);
     snakeThread.setDaemon(true);
-    controller.setSceen(Main.properties.widthSize, Main.properties.heightSize);
+    controller.setSceen(properties.getWidthSize(), properties.getWidthSize());
     update();
   }
 
@@ -75,11 +77,11 @@ public class World implements IWorld, IWorldAnimal {
 
   @Override
   public void stopGame() {
-
+    isRunned = false;
   }
 
   @Override
-  public boolean moveElement(Element element, Point newPosition) {
+  public synchronized boolean moveElement(Element element, Point newPosition) {
     boolean move = collision(element, newPosition);
     if (move) {
       elements[element.getPosition().x][element.getPosition().y] = null;
@@ -91,9 +93,13 @@ public class World implements IWorld, IWorldAnimal {
   }
 
   @Override
-  public void addElement(Element element) {
-    elements[element.getPosition().x][element.getPosition().y] = element;
-    addElements.add(element);
+  public synchronized boolean addElement(Element element) {
+    boolean move = collision(element, element.getPosition());
+    if (move) {
+      elements[element.getPosition().x][element.getPosition().y] = element;
+      addElements.add(element);
+    }
+    return move;
   }
 
   @Override
@@ -106,9 +112,9 @@ public class World implements IWorld, IWorldAnimal {
   }
 
   private boolean canMoveTo(Point point) {
-    return (point.x < Main.properties.widthSize &&
-            point.y < Main.properties.heightSize &&
-            point.x >= 0
+    return (point.x < properties.getWidthSize()
+            && point.y < properties.getHeightSize()
+            && point.x >= 0
             && point.y >= 0);
   }
 

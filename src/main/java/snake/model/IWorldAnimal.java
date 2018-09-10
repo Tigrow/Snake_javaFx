@@ -9,7 +9,7 @@ public interface IWorldAnimal {
 
   boolean moveElement(Element element, Point newPosition);
 
-  void addElement(Element element);
+  boolean addElement(Element element);
 
   Element getElementByPosition(Point position);
 
