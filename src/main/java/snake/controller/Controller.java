@@ -1,5 +1,6 @@
 package snake.controller;
 
+import snake.Main;
 import snake.model.IWorld;
 import snake.model.World;
 import snake.model.animal.elements.Direction;
@@ -15,13 +16,15 @@ public class Controller implements IControllerModel, IControllerView {
   @Override
   public void init(IMainView mainView) {
     this.mainView = mainView;
-    world = new World(this);
+    world = new World(this, Main.properties);
+    mainView.disableStopButton();
   }
 
   @Override
   public void startGame() {
     world.startGame();
     mainView.disableStartButton();
+    mainView.enableStopButton();
   }
 
   @Override
@@ -32,6 +35,13 @@ public class Controller implements IControllerModel, IControllerView {
   @Override
   public void rightPressed() {
     world.changeDirection(Direction.Right);
+  }
+
+  @Override
+  public void stopGame() {
+    world.stopGame();
+    mainView.disableStopButton();
+    mainView.enableStartButton();
   }
 
   @Override
@@ -47,7 +57,9 @@ public class Controller implements IControllerModel, IControllerView {
 
   @Override
   public void gameOver() {
-
+    mainView.enableStartButton();
+    mainView.disableStopButton();
+    mainView.showGameOver();
   }
 
   @Override

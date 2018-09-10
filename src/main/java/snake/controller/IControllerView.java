@@ -10,4 +10,6 @@ public interface IControllerView {
   void leftPressed();
 
   void rightPressed();
+
+  void stopGame();
 }
