@@ -1,10 +1,19 @@
 package snake;
 
 public class Properties {
-  public int heightSize = 40;
-  public int widthSize = 40;
-  public int snakeSize = 5;
-  private int frogNumber = 500;
+  private int heightSize = 40;
+  private int widthSize = 40;
+  private int snakeSize = 5;
+  private int frogNumber = 40;
+  private int snakeSleep = 200;
+
+  public int getSnakeSleep() {
+    return snakeSleep;
+  }
+
+  public void setSnakeSleep(int snakeSleep) {
+    this.snakeSleep = snakeSleep;
+  }
 
   public int getHeightSize() {
     return heightSize;
