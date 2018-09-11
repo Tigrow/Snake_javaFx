@@ -1,4 +1,4 @@
-package snake.model.animal;
+package snake.model.animal.frog;
 
 import snake.Properties;
 import snake.model.IWorldAnimal;

@@ -9,11 +9,7 @@ public interface IWorldAnimal {
 
   boolean moveElement(Element element, Point newPosition);
 
-  boolean addElement(Element element);
-
-  Element getElementByPosition(Point position);
-
-  void snakeDeath();
+  void addElement(Element element);
 
   Direction getDirection();
 

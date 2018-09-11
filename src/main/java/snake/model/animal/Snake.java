@@ -22,13 +22,16 @@ public class Snake implements Runnable {
     this.bodyList = new LinkedList<>();
     tail = new Tail(new Point(0, 0));
     world.addElement(tail);
+    world.moveElement(tail,tail.getPosition());
     for (int i = 1; i <= properties.getSnakeSize() - 2; i++) {
       Body body = new Body(new Point(i, 0));
       bodyList.addFirst(body);
       world.addElement(body);
+      world.moveElement(body,body.getPosition());
     }
     head = new Head(new Point(properties.getSnakeSize() - 1, 0));
     world.addElement(head);
+    world.moveElement(head,head.getPosition());
   }
 
   @Override
@@ -59,6 +62,7 @@ public class Snake implements Runnable {
         Body body = new Body(newBodyPosition);
         bodyList.addFirst(body);
         world.addElement(body);
+        world.moveElement(body,body.getPosition());
         addBodyCount--;
       } else {
         if (!bodyList.isEmpty()) {

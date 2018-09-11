@@ -61,8 +61,6 @@ public class MainView implements Initializable, IMainView {
         for (int i = 0; i < list.size(); i++) {
           Element element = list.get(i);
           Circle circle = getCircleByElements(element);
-          circle.setLayoutX(element.getPosition().x * CELL_SIZE + CELL_SIZE / 2);
-          circle.setLayoutY(element.getPosition().y * CELL_SIZE + CELL_SIZE / 2);
           map.put(element, circle);
           pane.getChildren().add(circle);
         }

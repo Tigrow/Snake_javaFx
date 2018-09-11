@@ -2,7 +2,7 @@ package snake.model;
 
 import snake.Properties;
 import snake.controller.IControllerModel;
-import snake.model.animal.FrogController;
+import snake.model.animal.frog.FrogController;
 import snake.model.animal.Snake;
 import snake.model.animal.elements.*;
 
@@ -54,11 +54,6 @@ public class World implements IWorld, IWorldAnimal {
   }
 
   @Override
-  public void snakeDeath() {
-    isRunned = false;
-  }
-
-  @Override
   public void startGame() {
     isRunned = true;
     snakeThread.start();
@@ -93,17 +88,11 @@ public class World implements IWorld, IWorldAnimal {
   }
 
   @Override
-  public synchronized boolean addElement(Element element) {
-    boolean move = collision(element, element.getPosition());
-    if (move) {
-      elements[element.getPosition().x][element.getPosition().y] = element;
+  public synchronized void addElement(Element element) {
       addElements.add(element);
-    }
-    return move;
   }
 
-  @Override
-  public Element getElementByPosition(Point point) {
+  private Element getElementByPosition(Point point) {
     if (canMoveTo(point)) {
       return elements[point.x][point.y];
     } else {
@@ -111,7 +100,7 @@ public class World implements IWorld, IWorldAnimal {
     }
   }
 
-  private boolean canMoveTo(Point point) {
+  protected boolean canMoveTo(Point point) {
     return (point.x < properties.getWidthSize()
             && point.y < properties.getHeightSize()
             && point.x >= 0
