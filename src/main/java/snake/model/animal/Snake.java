@@ -16,7 +16,7 @@ public class Snake implements Runnable {
   private Head head;
   private Tail tail;
   private LinkedList<Body> bodyList;
-  private Point dir = new Point(0, 1);
+  private Point dir = new Point(1, 0);
   private int addBodyCount = 0;
 
   public Snake(Properties properties, IWorldSnake world) {
