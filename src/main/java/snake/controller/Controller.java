@@ -7,24 +7,34 @@ import snake.model.animal.elements.Direction;
 import snake.model.animal.elements.Element;
 import snake.view.IMainView;
 
-import java.util.List;
-
 public class Controller implements IControllerModel, IControllerView {
   private IWorld world;
   private IMainView mainView;
+  private boolean statusGame;
+
+  private void newGame() {
+    world = new World(this, Main.properties);
+    mainView.disableStopButton();
+    mainView.setScore(0);
+    statusGame = true;
+  }
 
   @Override
   public void init(IMainView mainView) {
     this.mainView = mainView;
-    world = new World(this, Main.properties);
-    mainView.disableStopButton();
+    newGame();
   }
 
   @Override
   public void startGame() {
-    world.startGame();
-    mainView.disableStartButton();
-    mainView.enableStopButton();
+    if (statusGame) {
+      world.startGame();
+      mainView.disableStartButton();
+      mainView.enableStopButton();
+    } else {
+      newGame();
+      mainView.changeTextStartButtonToStart();
+    }
   }
 
   @Override
@@ -42,6 +52,8 @@ public class Controller implements IControllerModel, IControllerView {
     world.stopGame();
     mainView.disableStopButton();
     mainView.enableStartButton();
+    mainView.changeTextStartButtonToNew();
+    statusGame = false;
   }
 
   @Override
@@ -50,16 +62,30 @@ public class Controller implements IControllerModel, IControllerView {
   }
 
   @Override
+  public void updateElement(Element element, Changer changer) {
+    if (changer == Changer.add) {
+      mainView.addElement(element);
+    } else if (changer == Changer.move) {
+      mainView.moveElement(element);
+    } else if (changer == Changer.delete) {
+      mainView.deleteElement(element);
+    }
+  }
+
+  /*@Override
   public void updateAll(List<Element> addElements, List<Element> deleteElements, List<Element> moveElements) {
     mainView.addElement(addElements);
     mainView.moveElement(moveElements);
-  }
+    mainView.deleteElement(deleteElements);
+  }*/
 
   @Override
   public void gameOver() {
     mainView.enableStartButton();
     mainView.disableStopButton();
     mainView.showGameOver();
+    mainView.changeTextStartButtonToNew();
+    statusGame = false;
   }
 
   @Override

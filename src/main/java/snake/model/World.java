@@ -1,22 +1,20 @@
 package snake.model;
 
 import snake.Properties;
+import snake.controller.Changer;
 import snake.controller.IControllerModel;
-import snake.model.animal.frog.FrogController;
 import snake.model.animal.Snake;
 import snake.model.animal.elements.*;
+import snake.model.animal.frog.FrogController;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
-public class World implements IWorld, IWorldAnimal {
+public class World implements IWorld, IWorldAnimal,IWorldSnake {
   private Element[][] elements;
   private Snake snake;
   private boolean isRunned = false;
   private Thread snakeThread, frogThread;
   private IControllerModel controller;
-  private List<Element> addElements, deleteElements, moveElements;
   private Direction dir = Direction.None;
   private FrogController frogController;
   private Properties properties;
@@ -25,7 +23,6 @@ public class World implements IWorld, IWorldAnimal {
   public World(IControllerModel controller, Properties properties) {
     this.controller = controller;
     this.properties = properties;
-    initLists();
     elements = new Element[properties.getWidthSize()][properties.getHeightSize()];
     snake = new Snake(properties, this);
     frogController = new FrogController(properties, this);
@@ -34,23 +31,12 @@ public class World implements IWorld, IWorldAnimal {
     snakeThread = new Thread(snake);
     snakeThread.setDaemon(true);
     controller.setSceen(properties.getWidthSize(), properties.getHeightSize());
-    update();
   }
 
-  public synchronized void update() {
-    controller.updateAll(addElements, deleteElements, moveElements);
-    initLists();
-  }
 
   @Override
   public boolean isRunned() {
     return isRunned;
-  }
-
-  private void initLists() {
-    addElements = new ArrayList<>();
-    deleteElements = new ArrayList<>();
-    moveElements = new ArrayList<>();
   }
 
   @Override
@@ -82,14 +68,22 @@ public class World implements IWorld, IWorldAnimal {
       elements[element.getPosition().x][element.getPosition().y] = null;
       element.setPosition(newPosition);
       elements[newPosition.x][newPosition.y] = element;
-      moveElements.add(element);
+      controller.updateElement(element,Changer.move);
     }
     return move;
   }
 
   @Override
   public synchronized void addElement(Element element) {
-      addElements.add(element);
+    controller.updateElement(element, Changer.add);
+  }
+
+  @Override
+  public void deleteElement(Element element) {
+    if (elements[element.getPosition().x][element.getPosition().y] == element) {
+      elements[element.getPosition().x][element.getPosition().y] = null;
+      controller.updateElement(element,Changer.delete);
+    }
   }
 
   private Element getElementByPosition(Point point) {

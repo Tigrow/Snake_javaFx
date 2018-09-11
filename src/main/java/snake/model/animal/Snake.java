@@ -1,22 +1,25 @@
 package snake.model.animal;
 
 import snake.Properties;
-import snake.model.IWorldAnimal;
-import snake.model.animal.elements.*;
+import snake.model.IWorldSnake;
+import snake.model.animal.elements.Body;
+import snake.model.animal.elements.Direction;
+import snake.model.animal.elements.Head;
+import snake.model.animal.elements.Tail;
 
 import java.awt.Point;
 import java.util.LinkedList;
 
 public class Snake implements Runnable {
   private Properties properties;
-  private IWorldAnimal world;
+  private IWorldSnake world;
   private Head head;
   private Tail tail;
   private LinkedList<Body> bodyList;
   private Point dir = new Point(0, 1);
   private int addBodyCount = 0;
 
-  public Snake(Properties properties, IWorldAnimal world) {
+  public Snake(Properties properties, IWorldSnake world) {
     this.properties = properties;
     this.world = world;
     this.bodyList = new LinkedList<>();
@@ -38,7 +41,6 @@ public class Snake implements Runnable {
   public void run() {
     while (world.isRunned()) {
       move();
-      world.update();
       try {
         Thread.sleep(properties.getSnakeSleep());
       } catch (InterruptedException e) {

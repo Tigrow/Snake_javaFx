@@ -1,9 +1,8 @@
 package snake.model;
 
-import snake.model.animal.elements.Direction;
 import snake.model.animal.elements.Element;
 
-import java.awt.Point;
+import java.awt.*;
 
 public interface IWorldAnimal {
 
@@ -11,11 +10,7 @@ public interface IWorldAnimal {
 
   void addElement(Element element);
 
-  Direction getDirection();
-
-  void update();
+  void deleteElement(Element element);
 
   boolean isRunned();
-
-  void changeDirection(Direction direction);
 }
