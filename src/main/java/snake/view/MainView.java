@@ -16,7 +16,6 @@ import snake.model.animal.elements.*;
 
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.ResourceBundle;
 
 
@@ -54,53 +53,56 @@ public class MainView implements Initializable, IMainView {
   }
 
   @Override
-  public void addElement(final List<Element> list) {
+  public void addElement(final Element element) {
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
-        for (int i = 0; i < list.size(); i++) {
-          Element element = list.get(i);
-          Circle circle = getCircleByElements(element);
-          map.put(element, circle);
-          pane.getChildren().add(circle);
-        }
-      }
-    });
-
-  }
-
-  @Override
-  public void moveElement(final List<Element> list) {
-    Platform.runLater(new Runnable() {
-      @Override
-      public void run() {
-        for (int i = 0; i < list.size(); i++) {
-          Element element = list.get(i);
-          Circle circle = map.get(element);
-          if (circle == null) {
-            circle = getCircleByElements(element);
-          }
-          circle.setLayoutX(element.getPosition().x * CELL_SIZE + CELL_SIZE / 2);
-          circle.setLayoutY(element.getPosition().y * CELL_SIZE + CELL_SIZE / 2);
-        }
+        Circle circle = getCircleByElements(element);
+        map.put(element, circle);
+        pane.getChildren().add(circle);
       }
     });
   }
 
   @Override
-  public void deleteElement() {
+  public void moveElement(final Element element) {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        Circle circle = map.get(element);
+        if (circle == null) {
+          circle = getCircleByElements(element);
+        }
+        circle.setLayoutX(element.getPosition().x * CELL_SIZE + CELL_SIZE / 2);
+        circle.setLayoutY(element.getPosition().y * CELL_SIZE + CELL_SIZE / 2);
+      }
+    });
+  }
 
+  @Override
+  public void deleteElement(final Element element) {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        Circle circle = map.get(element);
+        pane.getChildren().remove(circle);
+        map.remove(element);
+      }
+    });
   }
 
   @Override
   public void setSceen(int width, int height) {
+    pane.getChildren().removeAll();
+    pane.getChildren().clear();
     Rectangle rectangle = new Rectangle();
+    map = new HashMap<>();
+    pane.getChildren().add(rectangle);
     rectangle.setX(0);
     rectangle.setY(0);
     rectangle.setWidth(CELL_SIZE * width);
     rectangle.setHeight(CELL_SIZE * height);
     rectangle.setFill(Color.BLACK);
-    pane.getChildren().add(rectangle);
   }
 
   @Override
@@ -138,6 +140,26 @@ public class MainView implements Initializable, IMainView {
     stopButton.setDisable(false);
   }
 
+  @Override
+  public void changeTextStartButtonToNew() {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        startButton.setText("New game");
+      }
+    });
+  }
+
+  @Override
+  public void changeTextStartButtonToStart() {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        startButton.setText("Start");
+      }
+    });
+  }
+
   private Circle getCircleByElements(Element element) {
     Circle circle = null;
     if (element instanceof Head) {
@@ -151,9 +173,8 @@ public class MainView implements Initializable, IMainView {
       circle.setFill(Color.YELLOW);
     } else if (element instanceof FrogBody) {
       circle = new Circle((double) CELL_SIZE / 3);
-      circle.setFill(Color.GREENYELLOW);
+      circle.setFill(Color.GREEN);
     }
     return circle;
   }
-
 }

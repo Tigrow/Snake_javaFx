@@ -2,14 +2,13 @@ package snake.view;
 
 import snake.model.animal.elements.Element;
 
-import java.util.List;
-
 public interface IMainView {
-  void addElement(List<Element> list);
 
-  void moveElement(List<Element> list);
+  void addElement(Element element);
 
-  void deleteElement();
+  void moveElement(Element element);
+
+  void deleteElement(Element element);
 
   void setSceen(int width, int height);
 
@@ -24,4 +23,8 @@ public interface IMainView {
   void disableStopButton();
 
   void enableStopButton();
+
+  void changeTextStartButtonToNew();
+
+  void changeTextStartButtonToStart();
 }
