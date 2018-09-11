@@ -33,14 +33,18 @@ public class FrogController implements Runnable {
   }
 
   public void resetPostion(Element element) {
-    frogs.get(element).resetPossition();
+    if (!frogs.get(element).resetPossition()) {
+      frogs.remove(element);
+      world.deleteElement(element);
+      frogBodyes.remove(element);
+    }
   }
 
   @Override
   public void run() {
     while (world.isRunned()) {
       move();
-      world.update();
+      //world.update();
       try {
         Thread.sleep(properties.getSnakeSleep() * 2);
       } catch (InterruptedException e) {

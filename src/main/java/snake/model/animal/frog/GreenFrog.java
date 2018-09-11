@@ -11,6 +11,7 @@ public class GreenFrog {
   private FrogBody frogBody;
   private IWorldAnimal world;
   private Properties properties;
+  private int counter = 100;
   private static Point[] mass = {new Point(1, 0), new Point(0, 1), new Point(-1, 0), new Point(0, -1)};
 
   GreenFrog(Properties properties, IWorldAnimal world) {
@@ -25,11 +26,14 @@ public class GreenFrog {
     return frogBody;
   }
 
-  protected void resetPossition() {
-    Point newPosition = (Point) frogBody.getPosition().clone();
-    newPosition.setLocation(randomPosition());
-    if (!world.moveElement(frogBody, newPosition)) {
+  protected boolean resetPossition() {
+    if (!world.moveElement(frogBody, randomPosition()) && counter > 0) {
+      counter--;
       resetPossition();
+      return false;
+    }else {
+      counter = 100;
+      return true;
     }
   }
 
