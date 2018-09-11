@@ -33,7 +33,7 @@ public class World implements IWorld, IWorldAnimal {
     frogThread.setDaemon(true);
     snakeThread = new Thread(snake);
     snakeThread.setDaemon(true);
-    controller.setSceen(properties.getWidthSize(), properties.getWidthSize());
+    controller.setSceen(properties.getWidthSize(), properties.getHeightSize());
     update();
   }
 
