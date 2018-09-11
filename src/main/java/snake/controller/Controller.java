@@ -72,13 +72,6 @@ public class Controller implements IControllerModel, IControllerView {
     }
   }
 
-  /*@Override
-  public void updateAll(List<Element> addElements, List<Element> deleteElements, List<Element> moveElements) {
-    mainView.addElement(addElements);
-    mainView.moveElement(moveElements);
-    mainView.deleteElement(deleteElements);
-  }*/
-
   @Override
   public void gameOver() {
     mainView.enableStartButton();

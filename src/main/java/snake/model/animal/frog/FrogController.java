@@ -44,7 +44,6 @@ public class FrogController implements Runnable {
   public void run() {
     while (world.isRunned()) {
       move();
-      //world.update();
       try {
         Thread.sleep(properties.getSnakeSleep() * 2);
       } catch (InterruptedException e) {

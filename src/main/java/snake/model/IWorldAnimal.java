@@ -2,7 +2,7 @@ package snake.model;
 
 import snake.model.animal.elements.Element;
 
-import java.awt.*;
+import java.awt.Point;
 
 public interface IWorldAnimal {
 

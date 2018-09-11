@@ -31,7 +31,7 @@ public class GreenFrog {
       counter--;
       resetPossition();
       return false;
-    }else {
+    } else {
       counter = 100;
       return true;
     }
@@ -42,9 +42,7 @@ public class GreenFrog {
     Point dir = mass[random.nextInt(mass.length)];
     Point newFrogPosition = (Point) frogBody.getPosition().clone();
     newFrogPosition.translate(dir.x, dir.y);
-    if (!world.moveElement(frogBody, newFrogPosition)) {
-      //move();
-    }
+    world.moveElement(frogBody, newFrogPosition);
   }
 
   private Point randomPosition() {

@@ -7,9 +7,9 @@ import snake.model.animal.Snake;
 import snake.model.animal.elements.*;
 import snake.model.animal.frog.FrogController;
 
-import java.awt.*;
+import java.awt.Point;
 
-public class World implements IWorld, IWorldAnimal,IWorldSnake {
+public class World implements IWorld, IWorldAnimal, IWorldSnake {
   private Element[][] elements;
   private Snake snake;
   private boolean isRunned = false;
@@ -68,7 +68,7 @@ public class World implements IWorld, IWorldAnimal,IWorldSnake {
       elements[element.getPosition().x][element.getPosition().y] = null;
       element.setPosition(newPosition);
       elements[newPosition.x][newPosition.y] = element;
-      controller.updateElement(element,Changer.move);
+      controller.updateElement(element, Changer.move);
     }
     return move;
   }
@@ -82,7 +82,7 @@ public class World implements IWorld, IWorldAnimal,IWorldSnake {
   public void deleteElement(Element element) {
     if (elements[element.getPosition().x][element.getPosition().y] == element) {
       elements[element.getPosition().x][element.getPosition().y] = null;
-      controller.updateElement(element,Changer.delete);
+      controller.updateElement(element, Changer.delete);
     }
   }
 
