@@ -1,12 +1,16 @@
-package snake.model.elements;
+package snake.model.animal.elements;
 
-import java.awt.*;
+import java.awt.Point;
 
 public abstract class Element {
   protected Point position;
 
   public Element(Point position) {
     this.position = position;
+  }
+
+  public Element() {
+    this.position = new Point();
   }
 
   public void setPosition(Point position) {

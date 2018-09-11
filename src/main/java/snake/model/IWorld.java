@@ -1,6 +1,6 @@
 package snake.model;
 
-import snake.model.elements.Direction;
+import snake.model.animal.elements.Direction;
 
 public interface IWorld {
 
@@ -8,5 +8,5 @@ public interface IWorld {
 
   void changeDirection(Direction direction);
 
-  void StopGame();
+  void stopGame();
 }

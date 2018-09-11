@@ -1,7 +1,6 @@
 package snake.view;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,10 +12,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import snake.controller.Controller;
 import snake.controller.IControllerView;
-import snake.model.elements.Body;
-import snake.model.elements.Element;
-import snake.model.elements.Head;
-import snake.model.elements.Tail;
+import snake.model.animal.elements.*;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -25,10 +21,11 @@ import java.util.ResourceBundle;
 
 
 public class MainView implements Initializable, IMainView {
-  private static final int CELL_SIZE = 20;
+  private static final int CELL_SIZE = 15;
   public Label labelScore;
   public Pane pane;
   public Button startButton;
+  public Button stopButton;
   private HashMap<Element, Circle> map;
   private IControllerView controller;
 
@@ -40,8 +37,12 @@ public class MainView implements Initializable, IMainView {
     controller.init(this);
   }
 
-  public void onActionStartButton(ActionEvent actionEvent) {
+  public void onActionStartButton() {
     controller.startGame();
+  }
+
+  public void onActionStopButton() {
+    controller.stopGame();
   }
 
   public void onMouseClickedPane(MouseEvent mouseEvent) {
@@ -72,18 +73,20 @@ public class MainView implements Initializable, IMainView {
 
   @Override
   public void moveElement(final List<Element> list) {
-    /*Platform.runLater(new Runnable() {
+    Platform.runLater(new Runnable() {
       @Override
       public void run() {
-
+        for (int i = 0; i < list.size(); i++) {
+          Element element = list.get(i);
+          Circle circle = map.get(element);
+          if (circle == null) {
+            circle = getCircleByElements(element);
+          }
+          circle.setLayoutX(element.getPosition().x * CELL_SIZE + CELL_SIZE / 2);
+          circle.setLayoutY(element.getPosition().y * CELL_SIZE + CELL_SIZE / 2);
+        }
       }
-    });*/
-    for (int i = 0; i < list.size(); i++) {
-      Element element = list.get(i);
-      Circle circle = map.get(element);
-      circle.setLayoutX(element.getPosition().x * CELL_SIZE + CELL_SIZE / 2);
-      circle.setLayoutY(element.getPosition().y * CELL_SIZE + CELL_SIZE / 2);
-    }
+    });
   }
 
   @Override
@@ -103,8 +106,13 @@ public class MainView implements Initializable, IMainView {
   }
 
   @Override
-  public void setScore(int score) {
-    labelScore.setText(Integer.toString(score));
+  public void setScore(final int score) {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        labelScore.setText(Integer.toString(score));
+      }
+    });
   }
 
   @Override
@@ -113,13 +121,23 @@ public class MainView implements Initializable, IMainView {
   }
 
   @Override
-  public void DisableStartButton() {
+  public void disableStartButton() {
     startButton.setDisable(true);
   }
 
   @Override
-  public void EnableStartButtor() {
+  public void enableStartButton() {
     startButton.setDisable(false);
+  }
+
+  @Override
+  public void disableStopButton() {
+    stopButton.setDisable(true);
+  }
+
+  @Override
+  public void enableStopButton() {
+    stopButton.setDisable(false);
   }
 
   private Circle getCircleByElements(Element element) {
@@ -133,7 +151,11 @@ public class MainView implements Initializable, IMainView {
     } else if (element instanceof Body) {
       circle = new Circle((double) CELL_SIZE / 3);
       circle.setFill(Color.YELLOW);
+    } else if (element instanceof FrogBody) {
+      circle = new Circle((double) CELL_SIZE / 3);
+      circle.setFill(Color.GREENYELLOW);
     }
     return circle;
   }
+
 }

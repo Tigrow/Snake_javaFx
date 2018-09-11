@@ -1,9 +1,10 @@
 package snake.controller;
 
+import snake.Main;
 import snake.model.IWorld;
 import snake.model.World;
-import snake.model.elements.Direction;
-import snake.model.elements.Element;
+import snake.model.animal.elements.Direction;
+import snake.model.animal.elements.Element;
 import snake.view.IMainView;
 
 import java.util.List;
@@ -15,13 +16,15 @@ public class Controller implements IControllerModel, IControllerView {
   @Override
   public void init(IMainView mainView) {
     this.mainView = mainView;
-    world = new World(this);
+    world = new World(this, Main.properties);
+    mainView.disableStopButton();
   }
 
   @Override
   public void startGame() {
     world.startGame();
-    mainView.DisableStartButton();
+    mainView.disableStartButton();
+    mainView.enableStopButton();
   }
 
   @Override
@@ -35,6 +38,13 @@ public class Controller implements IControllerModel, IControllerView {
   }
 
   @Override
+  public void stopGame() {
+    world.stopGame();
+    mainView.disableStopButton();
+    mainView.enableStartButton();
+  }
+
+  @Override
   public void setSceen(int width, int height) {
     mainView.setSceen(width, height);
   }
@@ -43,5 +53,17 @@ public class Controller implements IControllerModel, IControllerView {
   public void updateAll(List<Element> addElements, List<Element> deleteElements, List<Element> moveElements) {
     mainView.addElement(addElements);
     mainView.moveElement(moveElements);
+  }
+
+  @Override
+  public void gameOver() {
+    mainView.enableStartButton();
+    mainView.disableStopButton();
+    mainView.showGameOver();
+  }
+
+  @Override
+  public void updateScore(int score) {
+    mainView.setScore(score);
   }
 }

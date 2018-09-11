@@ -1,6 +1,6 @@
 package snake.view;
 
-import snake.model.elements.Element;
+import snake.model.animal.elements.Element;
 
 import java.util.List;
 
@@ -17,7 +17,11 @@ public interface IMainView {
 
   void showGameOver();
 
-  void DisableStartButton();
+  void disableStartButton();
 
-  void EnableStartButtor();
+  void enableStartButton();
+
+  void disableStopButton();
+
+  void enableStopButton();
 }
