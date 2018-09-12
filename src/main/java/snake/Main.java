@@ -15,7 +15,7 @@ public class Main extends Application {
 
   public static void main(String[] args) {
     properties = new Properties();
-    problemProperties =  properties.parse(args);
+    problemProperties = properties.parse(args);
     launch(args);
   }
 
@@ -27,6 +27,8 @@ public class Main extends Application {
     primaryStage.setScene(new Scene(root));
     primaryStage.show();
     MainView mainView = loader.getController();
-    mainView.showError();
+    if (problemProperties) {
+      mainView.showError();
+    }
   }
 }
