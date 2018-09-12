@@ -10,9 +10,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import snake.Main;
 import snake.controller.Controller;
 import snake.controller.IControllerView;
-import snake.model.animal.elements.*;
+import snake.model.animal.elements.Element;
+import snake.model.animal.elements.Head;
+import snake.model.animal.elements.Body;
+import snake.model.animal.elements.Tail;
+import snake.model.animal.elements.FrogBody;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -21,6 +26,13 @@ import java.util.ResourceBundle;
 
 public class MainView implements Initializable, IMainView {
   private static final int CELL_SIZE = 15;
+  private static final int HALF_CELL_SIZE = CELL_SIZE / 2;
+  private static final int HEAD_SNAKE_RADIUS = CELL_SIZE / 2;
+  private static final int BODY_SNAKE_RADIUS = CELL_SIZE / 3;
+  private static final int TAIL_SNAKE_RADIUS = CELL_SIZE / 4;
+  private static final int BODY_FROG_RADIUS = CELL_SIZE / 3;
+
+
   public Label labelScore;
   public Pane pane;
   public Button startButton;
@@ -73,8 +85,8 @@ public class MainView implements Initializable, IMainView {
         if (circle == null) {
           circle = getCircleByElements(element);
         }
-        circle.setLayoutX(element.getPosition().x * CELL_SIZE + CELL_SIZE / 2);
-        circle.setLayoutY(element.getPosition().y * CELL_SIZE + CELL_SIZE / 2);
+        circle.setLayoutX(element.getPosition().x * CELL_SIZE + HALF_CELL_SIZE);
+        circle.setLayoutY(element.getPosition().y * CELL_SIZE + HALF_CELL_SIZE);
       }
     });
   }
@@ -163,16 +175,16 @@ public class MainView implements Initializable, IMainView {
   private Circle getCircleByElements(Element element) {
     Circle circle = null;
     if (element instanceof Head) {
-      circle = new Circle((double) CELL_SIZE / 2);
+      circle = new Circle(HEAD_SNAKE_RADIUS);
       circle.setFill(Color.YELLOW);
     } else if (element instanceof Tail) {
-      circle = new Circle((double) CELL_SIZE / 4);
+      circle = new Circle(TAIL_SNAKE_RADIUS);
       circle.setFill(Color.YELLOW);
     } else if (element instanceof Body) {
-      circle = new Circle((double) CELL_SIZE / 3);
+      circle = new Circle(BODY_SNAKE_RADIUS);
       circle.setFill(Color.YELLOW);
     } else if (element instanceof FrogBody) {
-      circle = new Circle((double) CELL_SIZE / 3);
+      circle = new Circle(BODY_FROG_RADIUS);
       circle.setFill(Color.GREEN);
     }
     return circle;

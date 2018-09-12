@@ -3,8 +3,14 @@ package snake.model;
 import snake.Properties;
 import snake.controller.Changer;
 import snake.controller.IControllerModel;
+import snake.model.animal.elements.Body;
+import snake.model.animal.elements.Death;
+import snake.model.animal.elements.Direction;
+import snake.model.animal.elements.Element;
+import snake.model.animal.elements.FrogBody;
+import snake.model.animal.elements.Head;
 import snake.model.animal.Snake;
-import snake.model.animal.elements.*;
+
 import snake.model.animal.frog.FrogController;
 
 import java.awt.Point;

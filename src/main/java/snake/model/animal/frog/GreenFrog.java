@@ -4,7 +4,7 @@ import snake.Properties;
 import snake.model.IWorldAnimal;
 import snake.model.animal.elements.FrogBody;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.Random;
 
 public class GreenFrog {

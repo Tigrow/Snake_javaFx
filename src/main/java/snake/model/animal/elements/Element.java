@@ -3,7 +3,7 @@ package snake.model.animal.elements;
 import java.awt.Point;
 
 public abstract class Element {
-  protected Point position;
+  private Point position;
 
   public Element(Point position) {
     this.position = position;
