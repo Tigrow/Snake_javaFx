@@ -7,17 +7,21 @@ public class Properties {
   private int frogNumber = 20;
   private int snakeSleep = 200;
 
-  public void parse(String[] args) {
+  public boolean parse(String[] args) {
+    boolean problem = false;
     for (int i = 0; i < args.length; i++) {
       try {
         parseOne(args[i]);
       } catch (NumberFormatException ex) {
-        //
+        problem = true;
       } catch (NullPointerException ex) {
-        //
+        problem = true;
       }
     }
-    checkParam();
+    if (checkParam()) {
+      problem = true;
+    }
+    return problem;
   }
 
   private void parseOne(String arg) throws NumberFormatException, NullPointerException {
@@ -39,12 +43,16 @@ public class Properties {
     }
   }
 
-  private void checkParam() {
+  private boolean checkParam() {
+    boolean problem = false;
     if (snakeSize > widthSize) {
       snakeSize = widthSize;
+      problem = true;
     } else if ((frogNumber + snakeSize) >= (heightSize * widthSize)) {
       frogNumber = heightSize * widthSize / 10;
+      problem = true;
     }
+    return problem;
   }
 
   public int getSnakeSleep() {

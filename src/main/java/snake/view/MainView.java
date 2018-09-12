@@ -2,6 +2,7 @@ package snake.view;
 
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
@@ -46,6 +47,20 @@ public class MainView implements Initializable, IMainView {
     map = new HashMap<>();
     controller = new Controller();
     controller.init(this);
+  }
+
+  public void showError() {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setTitle("Error in params");
+    alert.setHeaderText("you have a problem in the parameters");
+    String errorMessage = "parameters corrected to \n"
+            + "Snake size =" + Main.properties.getSnakeSize() + "\n"
+            + "Frog number = " + Main.properties.getFrogNumber() + "\n"
+            + "Snake sleep = " + Main.properties.getSnakeSleep() + "\n"
+            + "Width size = " + Main.properties.getWidthSize() + "\n"
+            + "Height size = " + Main.properties.getHeightSize() + "\n";
+    alert.setContentText(errorMessage);
+    alert.showAndWait();
   }
 
   public void onActionStartButton() {
