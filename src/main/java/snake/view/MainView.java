@@ -13,6 +13,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import snake.Main;
 import snake.model.animal.elements.Element;
+import snake.model.animal.elements.RedFrogBody;
 import snake.model.animal.elements.frog.GreenFrogBody;
 import snake.model.animal.elements.snake.SnakeBody;
 import snake.model.animal.elements.snake.SnakeHead;
@@ -211,6 +212,10 @@ public class MainView extends ObservableView {
       circle.setVisible(true);
       circle.setRadius(BODY_FROG_RADIUS);
       circle.setFill(Color.LIGHTGREEN);
+    } else if (element instanceof RedFrogBody) {
+      circle.setVisible(true);
+      circle.setRadius(BODY_FROG_RADIUS);
+      circle.setFill(Color.RED);
     } else {
       circle.setVisible(false);
     }

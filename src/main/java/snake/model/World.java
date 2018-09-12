@@ -9,6 +9,7 @@ import snake.Properties;
 import snake.model.animal.Frog;
 import snake.model.animal.Snake;
 import snake.model.animal.elements.Element;
+import snake.model.animal.elements.RedFrogBody;
 import snake.model.animal.elements.Wall;
 import snake.model.animal.elements.frog.FrogBody;
 import snake.model.animal.elements.frog.GreenFrogBody;
@@ -152,6 +153,11 @@ public class World extends ObservableWorld {
         running = false;
         setChanged();
         notifyObservers(WorldChange.GAME_OVER);
+      } else if (elementByPosition instanceof RedFrogBody){
+        frogs.get(elementByPosition).kill();
+        snake.deleteBodySegment();
+        scorePlus();
+        scorePlus();
       }
     }
     return alive;
