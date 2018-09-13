@@ -54,26 +54,34 @@ public class Snake implements Runnable {
   }
 
   private void move() {
-    Point newHeadPosition = (Point) head.getPosition().clone();
-    Point newTailPosition = (Point) bodyList.getLast().getPosition().clone();
-    Point newBodyPosition = (Point) head.getPosition().clone();
     changeDirection();
+    moveHead();
+  }
+
+  private void moveHead() {
+    Point newHeadPosition = (Point) head.getPosition().clone();
+    Point oldHeadPosition = (Point) head.getPosition().clone();
     newHeadPosition.translate(dir.x, dir.y);
     if (world.moveElement(head, newHeadPosition)) {
-      if (addBodyCount != 0) {
-        Body body = new Body(newBodyPosition);
-        bodyList.addFirst(body);
-        world.addElement(body);
-        world.moveElement(body, body.getPosition());
-        addBodyCount--;
-      } else {
-        if (!bodyList.isEmpty()) {
-          bodyList.addFirst(bodyList.getLast());
-          bodyList.removeLast();
-          world.moveElement(bodyList.getFirst(), newBodyPosition);
-        }
-        world.moveElement(tail, newTailPosition);
+      moveBody(oldHeadPosition);
+    }
+  }
+
+  private void moveBody(Point position) {
+    Point newTailPosition = (Point) bodyList.getLast().getPosition().clone();
+    if (addBodyCount > 0) {
+      Body body = new Body(position);
+      bodyList.addFirst(body);
+      world.addElement(body);
+      world.moveElement(body, body.getPosition());
+      addBodyCount--;
+    } else {
+      if (!bodyList.isEmpty()) {
+        bodyList.addFirst(bodyList.getLast());
+        bodyList.removeLast();
+        world.moveElement(bodyList.getFirst(), position);
       }
+      world.moveElement(tail, newTailPosition);
     }
   }
 
