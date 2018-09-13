@@ -49,6 +49,7 @@ public class MainView extends ObservableView {
     String errorMessage = "parameters corrected to \n"
             + "Snake size =" + Main.properties.getSnakeSize() + "\n"
             + "Green frog number = " + Main.properties.getGreenFrogNumber() + "\n"
+            + "Red frog number = " + Main.properties.getRedFrogNumber() + "\n"
             + "Snake sleep = " + Main.properties.getSnakeSleep() + "\n"
             + "Width size = " + Main.properties.getWidthSize() + "\n"
             + "Height size = " + Main.properties.getHeightSize() + "\n";
