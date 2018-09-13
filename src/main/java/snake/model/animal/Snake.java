@@ -71,6 +71,14 @@ public class Snake implements Runnable {
     changeDirection = direction;
   }
 
+  public void deleteBodySegment() {
+    if (bodyList.size() + 2 > properties.getSnakeSize()) {
+      world.deleteElement(bodyList.getLast());
+      bodyList.removeLast();
+      world.moveElement(tail,bodyList.getLast().getPosition());
+    }
+  }
+
   private void move() {
     changeDirection();
     moveHead();
