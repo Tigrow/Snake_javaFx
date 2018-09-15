@@ -3,19 +3,16 @@ package snake.model;
 import snake.Properties;
 import snake.controller.Changer;
 import snake.controller.IControllerModel;
-import snake.model.animal.elements.Body;
-import snake.model.animal.elements.Death;
-import snake.model.animal.elements.Direction;
-import snake.model.animal.elements.Element;
-import snake.model.animal.elements.FrogBody;
-import snake.model.animal.elements.Head;
+import snake.model.animal.elements.*;
 import snake.model.animal.Snake;
 
 import snake.model.animal.frog.FrogController;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
-public class World implements IWorld, IWorldAnimal, IWorldSnake {
+public class World implements IWorld, IWorldAnimal, IWorldSnake, IWorldFrog {
   private Element[][] elements;
   private Snake snake;
   private boolean isRunned = false;
@@ -93,36 +90,33 @@ public class World implements IWorld, IWorldAnimal, IWorldSnake {
   }
 
   private Element getElementByPosition(Point point) {
-    if (canMoveTo(point)) {
-      return elements[point.x][point.y];
-    } else {
-      return new Death(point);
-    }
+    return getElementByPosition(point.x, point.y);
   }
 
-  protected boolean canMoveTo(Point point) {
-    return (point.x < properties.getWidthSize()
-            && point.y < properties.getHeightSize()
-            && point.x >= 0
-            && point.y >= 0);
+    private Element getElementByPosition(int x, int y) {
+        if (canMoveTo(x, y)) {
+            return elements[x][y];
+        } else {
+            return new Death(new Point(x, y));
+        }
+    }
+
+  protected boolean canMoveTo(int x, int y) {
+    return (x < properties.getWidthSize()
+            && y < properties.getHeightSize()
+            && x >= 0
+            && y >= 0);
   }
 
   private boolean collision(Element element, Point newPosition) {
     boolean isAlive = true;
     Element elementByPosition = getElementByPosition(newPosition);
-    if (element instanceof FrogBody) {
-      if (elementByPosition instanceof Death) {
-        isAlive = false;
-      } else if (elementByPosition != null) {
-        isAlive = false;
-      }
-    }
     if (element instanceof Head) {
       if (elementByPosition instanceof Death) {
         isAlive = false;
         isRunned = false;
         controller.gameOver();
-      } else if (elementByPosition instanceof FrogBody) {
+      } else if (elementByPosition instanceof GreenFrogBody) {
         frogController.resetPostion(elementByPosition);
         snake.addBodySegment();
         scorePlus();
@@ -138,5 +132,46 @@ public class World implements IWorld, IWorldAnimal, IWorldSnake {
   private void scorePlus() {
     score++;
     controller.updateScore(score);
+  }
+
+  @Override
+  public List<Point> getAllFreePosition() {
+    List<Point> positionList = new ArrayList<>();
+    for (int x = 0; x < properties.getWidthSize(); x++) {
+      for (int y = 0; y < properties.getHeightSize(); y++) {
+        if (getElementByPosition(x, y) == null) {
+          positionList.add(new Point(x, y));
+        }
+      }
+    }
+    return positionList;
+  }
+
+
+  @Override
+  public List<Point> getFreePosition(Point position) {
+    Point positionLeft = (Point) position.clone();
+    positionLeft.translate(-1, 0);
+    Point positionRight = (Point) position.clone();
+    positionRight.translate(1, 0);
+    Point positionUp = (Point) position.clone();
+    positionUp.translate(0, 1);
+    Point positionDown = (Point) position.clone();
+    positionDown.translate(0, -1);
+
+    List<Point> freePosition = new ArrayList<>(4);
+    if (getElementByPosition(positionLeft) == null) {
+      freePosition.add(positionLeft);
+    }
+    if (getElementByPosition(positionRight) == null) {
+      freePosition.add(positionRight);
+    }
+    if (getElementByPosition(positionUp) == null) {
+      freePosition.add(positionUp);
+    }
+    if (getElementByPosition(positionDown) == null) {
+      freePosition.add(positionDown);
+    }
+    return freePosition;
   }
 }

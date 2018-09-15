@@ -1,39 +1,55 @@
 package snake.model.animal.frog;
 
-import snake.Properties;
-import snake.model.IWorldAnimal;
-import snake.model.animal.elements.Element;
-
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import snake.Properties;
+
+import snake.model.IWorldFrog;
+import snake.model.animal.elements.Element;
+import snake.model.animal.elements.FrogBody;
+import snake.model.animal.elements.GreenFrogBody;
+
 public class FrogController implements Runnable {
-  private HashMap<Element, GreenFrog> frogs;
-  private List<Element> frogBodyes;
-  private IWorldAnimal world;
+  private HashMap<Element, Frog> frogs;
+  private List<FrogBody> frogBodyes;
+  private IWorldFrog world;
   private Properties properties;
 
-  public FrogController(Properties properties, IWorldAnimal world) {
+  public FrogController(Properties properties, IWorldFrog world) {
     this.world = world;
     this.properties = properties;
     frogs = new HashMap<>();
     frogBodyes = new ArrayList<>();
     for (int i = 0; i < properties.getFrogNumber(); i++) {
-      GreenFrog greenFrog = new GreenFrog(properties, world);
+      Frog<GreenFrogBody> greenFrog = new Frog<>(properties, new GreenFrogBody());
       frogs.put(greenFrog.getFrogBody(), greenFrog);
       frogBodyes.add(greenFrog.getFrogBody());
+      world.addElement(greenFrog.getFrogBody());
+      resetPostion(greenFrog.getFrogBody());
     }
   }
 
   private void move() {
     for (int i = 0; i < frogBodyes.size(); i++) {
-      frogs.get(frogBodyes.get(i)).move();
+      FrogBody frogBody = frogBodyes.get(i);
+      List<Point> freePosition = world.getFreePosition(frogBody.getPosition());
+      if (freePosition.size() > 0) {
+        Point newPosition = frogs.get(frogBody).move(freePosition);
+        world.moveElement(frogBody, newPosition);
+      }
     }
   }
 
   public void resetPostion(Element element) {
-    if (!frogs.get(element).resetPossition()) {
+    List<Point> freePosition = world.getAllFreePosition();
+    if (freePosition.size() > 0) {
+      Frog frog = frogs.get(element);
+      Point newPosition = frog.resetPosition(freePosition);
+      world.moveElement(frog.getFrogBody(), newPosition);
+    } else {
       frogs.remove(element);
       world.deleteElement(element);
       frogBodyes.remove(element);

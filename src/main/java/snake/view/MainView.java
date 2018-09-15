@@ -14,11 +14,7 @@ import javafx.scene.shape.Rectangle;
 import snake.Main;
 import snake.controller.Controller;
 import snake.controller.IControllerView;
-import snake.model.animal.elements.Element;
-import snake.model.animal.elements.Head;
-import snake.model.animal.elements.Body;
-import snake.model.animal.elements.Tail;
-import snake.model.animal.elements.FrogBody;
+import snake.model.animal.elements.*;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -198,7 +194,7 @@ public class MainView implements Initializable, IMainView {
     } else if (element instanceof Body) {
       circle = new Circle(BODY_SNAKE_RADIUS);
       circle.setFill(Color.YELLOW);
-    } else if (element instanceof FrogBody) {
+    } else if (element instanceof GreenFrogBody) {
       circle = new Circle(BODY_FROG_RADIUS);
       circle.setFill(Color.GREEN);
     }
