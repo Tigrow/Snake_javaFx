@@ -1,7 +1,5 @@
 package snake.model.animal.frog;
 
-import snake.Properties;
-
 import java.awt.Point;
 import java.util.List;
 import java.util.Random;
@@ -10,14 +8,12 @@ import snake.model.animal.elements.FrogBody;
 
 class Frog<T extends FrogBody> {
   protected T body;
-  protected Properties properties;
 
   protected T getFrogBody() {
     return body;
   }
 
-  Frog(Properties properties, T frogBody) {
-    this.properties = properties;
+  Frog(T frogBody) {
     body = frogBody;
   }
 

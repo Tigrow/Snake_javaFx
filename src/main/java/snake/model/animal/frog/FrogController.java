@@ -24,7 +24,7 @@ public class FrogController implements Runnable {
     frogs = new HashMap<>();
     frogBodyes = new ArrayList<>();
     for (int i = 0; i < properties.getFrogNumber(); i++) {
-      Frog<GreenFrogBody> greenFrog = new Frog<>(properties, new GreenFrogBody());
+      Frog<GreenFrogBody> greenFrog = new Frog<>(new GreenFrogBody());
       frogs.put(greenFrog.getFrogBody(), greenFrog);
       frogBodyes.add(greenFrog.getFrogBody());
       world.addElement(greenFrog.getFrogBody());
