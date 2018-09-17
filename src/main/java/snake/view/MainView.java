@@ -15,6 +15,10 @@ import snake.Main;
 import snake.controller.Controller;
 import snake.controller.IControllerView;
 import snake.model.animal.elements.*;
+import snake.model.animal.elements.frog.GreenFrogBody;
+import snake.model.animal.elements.snake.SnakeBody;
+import snake.model.animal.elements.snake.SnakeHead;
+import snake.model.animal.elements.snake.SnakeTail;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -22,6 +26,7 @@ import java.util.ResourceBundle;
 
 
 public class MainView implements Initializable, IMainView {
+
   private static final int CELL_SIZE = 15;
   private static final int HALF_CELL_SIZE = CELL_SIZE / 2;
   private static final int HEAD_SNAKE_RADIUS = CELL_SIZE / 2;
@@ -73,6 +78,22 @@ public class MainView implements Initializable, IMainView {
     } else if (mouseEvent.getButton() == MouseButton.SECONDARY) {
       controller.rightPressed();
     }
+  }
+
+  @Override
+  public void gameStarted() {
+  }
+
+  @Override
+  public void gameStoped() {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        stopButton.setDisable(true);
+        startButton.setDisable(false);
+        startButton.setText("New game");
+      }
+    });
   }
 
   @Override
@@ -139,18 +160,8 @@ public class MainView implements Initializable, IMainView {
   }
 
   @Override
-  public void showGameOver() {
-
-  }
-
-  @Override
   public void disableStartButton() {
     startButton.setDisable(true);
-  }
-
-  @Override
-  public void enableStartButton() {
-    startButton.setDisable(false);
   }
 
   @Override
@@ -161,16 +172,6 @@ public class MainView implements Initializable, IMainView {
   @Override
   public void enableStopButton() {
     stopButton.setDisable(false);
-  }
-
-  @Override
-  public void changeTextStartButtonToNew() {
-    Platform.runLater(new Runnable() {
-      @Override
-      public void run() {
-        startButton.setText("New game");
-      }
-    });
   }
 
   @Override
@@ -185,13 +186,13 @@ public class MainView implements Initializable, IMainView {
 
   private Circle getCircleByElements(Element element) {
     Circle circle = null;
-    if (element instanceof Head) {
+    if (element instanceof SnakeHead) {
       circle = new Circle(HEAD_SNAKE_RADIUS);
       circle.setFill(Color.YELLOW);
-    } else if (element instanceof Tail) {
+    } else if (element instanceof SnakeTail) {
       circle = new Circle(TAIL_SNAKE_RADIUS);
       circle.setFill(Color.YELLOW);
-    } else if (element instanceof Body) {
+    } else if (element instanceof SnakeBody) {
       circle = new Circle(BODY_SNAKE_RADIUS);
       circle.setFill(Color.YELLOW);
     } else if (element instanceof GreenFrogBody) {

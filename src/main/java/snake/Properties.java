@@ -1,10 +1,10 @@
 package snake;
 
 public class Properties {
-  private int heightSize = 40;
-  private int widthSize = 40;
+  private int heightSize = 10;
+  private int widthSize = 10;
   private int snakeSize = 5;
-  private int frogNumber = 20;
+  private int frogNumber = 95;
   private int snakeSleep = 200;
 
   public boolean parse(String[] args) {
@@ -12,9 +12,7 @@ public class Properties {
     for (int i = 0; i < args.length; i++) {
       try {
         parseOne(args[i]);
-      } catch (NumberFormatException ex) {
-        problem = true;
-      } catch (NullPointerException ex) {
+      } catch (NumberFormatException | NullPointerException ex) {
         problem = true;
       }
     }
@@ -48,7 +46,7 @@ public class Properties {
     if (snakeSize > widthSize) {
       snakeSize = widthSize;
       problem = true;
-    } else if ((frogNumber + snakeSize) >= (heightSize * widthSize)) {
+    } else if ((frogNumber + snakeSize) > (heightSize * widthSize)) {
       frogNumber = heightSize * widthSize / 10;
       problem = true;
     }

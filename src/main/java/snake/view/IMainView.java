@@ -4,6 +4,10 @@ import snake.model.animal.elements.Element;
 
 public interface IMainView {
 
+  void gameStarted();
+
+  void gameStoped();
+
   void addElement(Element element);
 
   void moveElement(Element element);
@@ -14,17 +18,11 @@ public interface IMainView {
 
   void setScore(int score);
 
-  void showGameOver();
-
   void disableStartButton();
-
-  void enableStartButton();
 
   void disableStopButton();
 
   void enableStopButton();
-
-  void changeTextStartButtonToNew();
 
   void changeTextStartButtonToStart();
 }

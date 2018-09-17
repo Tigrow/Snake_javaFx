@@ -1,4 +1,4 @@
-package snake.model.animal.frog;
+/*package snake.model.animal.frog;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -8,9 +8,10 @@ import java.util.List;
 import snake.Properties;
 
 import snake.model.IWorldFrog;
+import snake.model.animal.Frog;
 import snake.model.animal.elements.Element;
-import snake.model.animal.elements.FrogBody;
-import snake.model.animal.elements.GreenFrogBody;
+import snake.model.animal.elements.frog.FrogBody;
+import snake.model.animal.elements.frog.GreenFrogBody;
 
 public class FrogController implements Runnable {
   private HashMap<Element, Frog> frogs;
@@ -37,8 +38,8 @@ public class FrogController implements Runnable {
       FrogBody frogBody = frogBodyes.get(i);
       List<Point> freePosition = world.getFreePosition(frogBody.getPosition());
       if (freePosition.size() > 0) {
-        Point newPosition = frogs.get(frogBody).move(freePosition);
-        world.moveElement(frogBody, newPosition);
+        //Point newPosition = frogs.get(frogBody).move(freePosition);
+        //world.moveElement(frogBody, newPosition);
       }
     }
   }
@@ -68,3 +69,4 @@ public class FrogController implements Runnable {
     }
   }
 }
+*/

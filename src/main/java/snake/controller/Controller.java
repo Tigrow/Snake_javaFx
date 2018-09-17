@@ -3,6 +3,7 @@ package snake.controller;
 import snake.Main;
 import snake.model.IWorld;
 import snake.model.World;
+import snake.model.World2;
 import snake.model.animal.elements.Direction;
 import snake.model.animal.elements.Element;
 import snake.view.IMainView;
@@ -13,7 +14,7 @@ public class Controller implements IControllerModel, IControllerView {
   private boolean statusGame;
 
   private void newGame() {
-    world = new World(this, Main.properties);
+    world = new World2(Main.properties);
     mainView.disableStopButton();
     mainView.setScore(0);
     statusGame = true;
@@ -39,20 +40,18 @@ public class Controller implements IControllerModel, IControllerView {
 
   @Override
   public void leftPressed() {
-    world.changeDirection(Direction.Left);
+    world.changeDirection(Direction.LEFT);
   }
 
   @Override
   public void rightPressed() {
-    world.changeDirection(Direction.Right);
+    world.changeDirection(Direction.RIGHT);
   }
 
   @Override
   public void stopGame() {
     world.stopGame();
-    mainView.disableStopButton();
-    mainView.enableStartButton();
-    mainView.changeTextStartButtonToNew();
+    mainView.gameStoped();
     statusGame = false;
   }
 
@@ -74,10 +73,7 @@ public class Controller implements IControllerModel, IControllerView {
 
   @Override
   public void gameOver() {
-    mainView.enableStartButton();
-    mainView.disableStopButton();
-    mainView.showGameOver();
-    mainView.changeTextStartButtonToNew();
+    mainView.gameStoped();
     statusGame = false;
   }
 

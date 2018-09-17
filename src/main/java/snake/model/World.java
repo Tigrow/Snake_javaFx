@@ -6,7 +6,9 @@ import snake.controller.IControllerModel;
 import snake.model.animal.elements.*;
 import snake.model.animal.Snake;
 
-import snake.model.animal.frog.FrogController;
+import snake.model.animal.elements.frog.GreenFrogBody;
+import snake.model.animal.elements.snake.SnakeBody;
+import snake.model.animal.elements.snake.SnakeHead;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ public class World implements IWorld, IWorldAnimal, IWorldSnake, IWorldFrog {
   private boolean isRunned = false;
   private Thread snakeThread, frogThread;
   private IControllerModel controller;
-  private Direction dir = Direction.None;
+  private Direction dir = Direction.NONE;
   private FrogController frogController;
   private Properties properties;
   private int score = 0;
@@ -111,7 +113,7 @@ public class World implements IWorld, IWorldAnimal, IWorldSnake, IWorldFrog {
   private boolean collision(Element element, Point newPosition) {
     boolean isAlive = true;
     Element elementByPosition = getElementByPosition(newPosition);
-    if (element instanceof Head) {
+    if (element instanceof SnakeHead) {
       if (elementByPosition instanceof Death) {
         isAlive = false;
         isRunned = false;
@@ -120,7 +122,7 @@ public class World implements IWorld, IWorldAnimal, IWorldSnake, IWorldFrog {
         frogController.resetPostion(elementByPosition);
         snake.addBodySegment();
         scorePlus();
-      } else if (elementByPosition instanceof Body) {
+      } else if (elementByPosition instanceof SnakeBody) {
         isAlive = false;
         isRunned = false;
         controller.gameOver();

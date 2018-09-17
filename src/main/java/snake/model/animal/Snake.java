@@ -2,10 +2,10 @@ package snake.model.animal;
 
 import snake.Properties;
 import snake.model.IWorldSnake;
-import snake.model.animal.elements.Body;
+import snake.model.animal.elements.snake.SnakeBody;
 import snake.model.animal.elements.Direction;
-import snake.model.animal.elements.Head;
-import snake.model.animal.elements.Tail;
+import snake.model.animal.elements.snake.SnakeHead;
+import snake.model.animal.elements.snake.SnakeTail;
 
 import java.awt.Point;
 import java.util.LinkedList;
@@ -13,28 +13,28 @@ import java.util.LinkedList;
 public class Snake implements Runnable {
   private Properties properties;
   private IWorldSnake world;
-  private Head head;
-  private Tail tail;
-  private LinkedList<Body> bodyList;
+  private SnakeHead snakeHead;
+  private SnakeTail snakeTail;
+  private LinkedList<SnakeBody> snakeBodyList;
   private Point dir = new Point(1, 0);
   private int addBodyCount = 0;
 
   public Snake(Properties properties, IWorldSnake world) {
     this.properties = properties;
     this.world = world;
-    this.bodyList = new LinkedList<>();
-    tail = new Tail(new Point(0, 0));
-    world.addElement(tail);
-    world.moveElement(tail, tail.getPosition());
+    this.snakeBodyList = new LinkedList<>();
+    snakeTail = new SnakeTail(new Point(0, 0));
+    world.addElement(snakeTail);
+    world.moveElement(snakeTail, snakeTail.getPosition());
     for (int i = 1; i <= properties.getSnakeSize() - 2; i++) {
-      Body body = new Body(new Point(i, 0));
-      bodyList.addFirst(body);
-      world.addElement(body);
-      world.moveElement(body, body.getPosition());
+      SnakeBody snakeBody = new SnakeBody(new Point(i, 0));
+      snakeBodyList.addFirst(snakeBody);
+      world.addElement(snakeBody);
+      world.moveElement(snakeBody, snakeBody.getPosition());
     }
-    head = new Head(new Point(properties.getSnakeSize() - 1, 0));
-    world.addElement(head);
-    world.moveElement(head, head.getPosition());
+    snakeHead = new SnakeHead(new Point(properties.getSnakeSize() - 1, 0));
+    world.addElement(snakeHead);
+    world.moveElement(snakeHead, snakeHead.getPosition());
   }
 
   @Override
@@ -59,42 +59,42 @@ public class Snake implements Runnable {
   }
 
   private void moveHead() {
-    Point newHeadPosition = (Point) head.getPosition().clone();
-    Point oldHeadPosition = (Point) head.getPosition().clone();
+    Point newHeadPosition = (Point) snakeHead.getPosition().clone();
+    Point oldHeadPosition = (Point) snakeHead.getPosition().clone();
     newHeadPosition.translate(dir.x, dir.y);
-    if (world.moveElement(head, newHeadPosition)) {
+    if (world.moveElement(snakeHead, newHeadPosition)) {
       moveBody(oldHeadPosition);
     }
   }
 
   private void moveBody(Point position) {
-    Point newTailPosition = (Point) bodyList.getLast().getPosition().clone();
+    Point newTailPosition = (Point) snakeBodyList.getLast().getPosition().clone();
     if (addBodyCount > 0) {
-      Body body = new Body(position);
-      bodyList.addFirst(body);
-      world.addElement(body);
-      world.moveElement(body, body.getPosition());
+      SnakeBody snakeBody = new SnakeBody(position);
+      snakeBodyList.addFirst(snakeBody);
+      world.addElement(snakeBody);
+      world.moveElement(snakeBody, snakeBody.getPosition());
       addBodyCount--;
     } else {
-      if (!bodyList.isEmpty()) {
-        bodyList.addFirst(bodyList.getLast());
-        bodyList.removeLast();
-        world.moveElement(bodyList.getFirst(), position);
+      if (!snakeBodyList.isEmpty()) {
+        snakeBodyList.addFirst(snakeBodyList.getLast());
+        snakeBodyList.removeLast();
+        world.moveElement(snakeBodyList.getFirst(), position);
       }
-      world.moveElement(tail, newTailPosition);
+      world.moveElement(snakeTail, newTailPosition);
     }
   }
 
   private void changeDirection() {
     Point oldDir = (Point) dir.clone();
-    if (world.getDirection() == Direction.Left) {
+    if (world.getDirection() == Direction.LEFT) {
       dir.x = oldDir.y * 1;
       dir.y = oldDir.x * -1;
-      world.changeDirection(Direction.None);
-    } else if (world.getDirection() == Direction.Right) {
+      world.changeDirection(Direction.NONE);
+    } else if (world.getDirection() == Direction.RIGHT) {
       dir.x = oldDir.y * -1;
       dir.y = oldDir.x * 1;
-      world.changeDirection(Direction.None);
+      world.changeDirection(Direction.NONE);
     }
   }
 }
