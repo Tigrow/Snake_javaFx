@@ -4,39 +4,53 @@ import java.awt.Point;
 import java.util.List;
 import java.util.Random;
 
+import snake.model.IWorldFrog;
+import snake.model.World;
 import snake.model.animal.elements.frog.FrogBody;
 
-class Frog<T extends FrogBody> implements Runnable {
-    private T body;
-    private int sleep;
+public class Frog<T extends FrogBody> implements Runnable {
+  private T body;
+  private int sleep;
+  private World world;
 
-    public T getFrogBody() {
-        return body;
-    }
+  public T getFrogBody() {
+    return body;
+  }
 
-    Frog(T frogBody, int sleep) {
-        this.sleep = sleep;
-        body = frogBody;
-    }
+  public Frog(T frogBody, int sleep, World world) {
+    this.world = world;
+    this.sleep = sleep;
+    body = frogBody;
+    resetPosition();
+  }
 
-    private Point move(List<Point> freePositions) {
-        Random random = new Random();
-        return freePositions.get(random.nextInt(freePositions.size()));
+  private void move() {
+    Random random = new Random();
+    List<Point> positions = world.getFreePosition(body.getPosition());
+    if (positions.size() > 0) {
+      Point point = positions.get(random.nextInt(positions.size()));
+      world.moveElement(body, point);
     }
+  }
 
-    public Point resetPosition(List<Point> freePositions) {
-        return move(freePositions);
-    }
+  public void resetPosition() {
+    world.moveRandomPosition(body);
+  }
 
-    @Override
-    public void run() {
-            while (world.isRunned()) {
-                move();
-                try {
-                    Thread.sleep(sleep);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+  private Point getRandomPoint(List<Point> positions) {
+    Random random = new Random();
+    return positions.get(random.nextInt(positions.size()));
+  }
+
+  @Override
+  public void run() {
+    while (world.isRunned()) {
+      move();
+      try {
+        Thread.sleep(sleep);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     }
+  }
 }

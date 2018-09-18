@@ -3,21 +3,31 @@ package snake.controller;
 import snake.Main;
 import snake.model.IWorld;
 import snake.model.World;
-import snake.model.World2;
 import snake.model.animal.elements.Direction;
 import snake.model.animal.elements.Element;
 import snake.view.IMainView;
 
-public class Controller implements IControllerModel, IControllerView {
-  private IWorld world;
+import java.util.Observable;
+import java.util.Observer;
+
+public class Controller implements IControllerModel, IControllerView, Observer {
+  private World world;
   private IMainView mainView;
   private boolean statusGame;
 
   private void newGame() {
-    world = new World2(Main.properties);
+    world = new World(Main.properties);
+    world.addObserver(this);
+    mainView.setSceen(Main.properties.getWidthSize(),Main.properties.getHeightSize());
+    world.loadGame();
     mainView.disableStopButton();
-    mainView.setScore(0);
     statusGame = true;
+  }
+
+  @Override
+  public void update(Observable o, Object arg) {
+    mainView.setScore(world.getScore());
+    mainView.updateMap(world.getElements());
   }
 
   @Override
@@ -55,7 +65,7 @@ public class Controller implements IControllerModel, IControllerView {
     statusGame = false;
   }
 
-  @Override
+ /* @Override
   public void setSceen(int width, int height) {
     mainView.setSceen(width, height);
   }
@@ -80,5 +90,5 @@ public class Controller implements IControllerModel, IControllerView {
   @Override
   public void updateScore(int score) {
     mainView.setScore(score);
-  }
+  }*/
 }

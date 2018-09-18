@@ -1,54 +1,84 @@
 package snake.model;
 
 import snake.Properties;
-import snake.controller.Changer;
 import snake.controller.IControllerModel;
+import snake.model.animal.Frog;
 import snake.model.animal.elements.*;
 import snake.model.animal.Snake;
 
+import snake.model.animal.elements.frog.FrogBody;
 import snake.model.animal.elements.frog.GreenFrogBody;
 import snake.model.animal.elements.snake.SnakeBody;
 import snake.model.animal.elements.snake.SnakeHead;
+import snake.model.animal.elements.snake.SnakeTail;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class World implements IWorld, IWorldAnimal, IWorldSnake, IWorldFrog {
+public class World extends Observable implements IWorld, IWorldAnimal, IWorldSnake, IWorldFrog {
   private Element[][] elements;
   private Snake snake;
   private boolean isRunned = false;
-  private Thread snakeThread, frogThread;
+  private HashMap<FrogBody, Frog> frogs;
+  private Thread snakeThread;
+  private List<Thread> frogThreads;
   private IControllerModel controller;
   private Direction dir = Direction.NONE;
-  private FrogController frogController;
+  //private FrogController frogController;
   private Properties properties;
   private int score = 0;
 
-  public World(IControllerModel controller, Properties properties) {
-    this.controller = controller;
+  public World(Properties properties) {
     this.properties = properties;
     elements = new Element[properties.getWidthSize()][properties.getHeightSize()];
-    snake = new Snake(properties, this);
-    frogController = new FrogController(properties, this);
-    frogThread = new Thread(frogController);
-    frogThread.setDaemon(true);
-    snakeThread = new Thread(snake);
-    snakeThread.setDaemon(true);
-    controller.setSceen(properties.getWidthSize(), properties.getHeightSize());
+    frogs = new HashMap<>();
+    frogThreads = new ArrayList<>();
+    //frogController = new FrogController(properties, this);
+    //    //frogThread = new Thread(frogController);
+    //    //frogThread.setDaemon(true);
+    //controller.setSceen(properties.getWidthSize(), properties.getHeightSize());
   }
 
+  @Override
+  public void loadGame() {
+    snake = new Snake(properties, this);
+    snakeThread = new Thread(snake);
+    snakeThread.setDaemon(true);
+    for (int i = 0; i < properties.getFrogNumber(); i++) {
+      addFrogs();
+    }
+  }
+
+  private void addFrogs() {
+    FrogBody frogBody = new GreenFrogBody();
+    Frog frog = new Frog(frogBody, properties.getSnakeSleep() * 2, this);
+    Thread frogThread = new Thread(frog);
+    frogThread.setDaemon(true);
+    frogThreads.add(frogThread);
+    frogs.put(frogBody, frog);
+  }
+
+  public Element[][] getElements() {
+    return elements;
+  }
+
+  public int getScore() {
+    return score;
+  }
 
   @Override
   public boolean isRunned() {
     return isRunned;
   }
 
+
   @Override
   public void startGame() {
     isRunned = true;
     snakeThread.start();
-    frogThread.start();
+    for (Thread frogThread : frogThreads) {
+      frogThread.start();
+    }
   }
 
   @Override
@@ -66,28 +96,45 @@ public class World implements IWorld, IWorldAnimal, IWorldSnake, IWorldFrog {
     isRunned = false;
   }
 
+  public synchronized void moveElements(List<Element> elementList, List<Point> newPositions) {
+    synchronized (elements) {
+      for (int i = 0; i < elementList.size(); i++) {
+        if (!moveElement(elementList.get(i), newPositions.get(i))) {
+          return;
+        }
+      }
+    }
+  }
+
   @Override
   public synchronized boolean moveElement(Element element, Point newPosition) {
-    boolean move = collision(element, newPosition);
-    if (move) {
-      elements[element.getPosition().x][element.getPosition().y] = null;
-      element.setPosition(newPosition);
-      elements[newPosition.x][newPosition.y] = element;
-      controller.updateElement(element, Changer.move);
+    synchronized (elements) {
+      boolean move = collision(element, newPosition);
+      if (move) {
+        elements[element.getPosition().x][element.getPosition().y] = null;
+        element.setPosition(newPosition);
+        elements[newPosition.x][newPosition.y] = element;
+        setChanged();
+        notifyObservers();
+      }
+      return move;
     }
-    return move;
   }
 
-  @Override
-  public synchronized void addElement(Element element) {
-    controller.updateElement(element, Changer.add);
-  }
-
-  @Override
-  public void deleteElement(Element element) {
-    if (elements[element.getPosition().x][element.getPosition().y] == element) {
-      elements[element.getPosition().x][element.getPosition().y] = null;
-      controller.updateElement(element, Changer.delete);
+  public synchronized boolean moveRandomPosition(Element element) {
+    synchronized (elements) {
+      List<Point> positions = getAllFreePosition();
+      if (positions.size() > 0) {
+        Random random = new Random();
+        Point position = positions.get(random.nextInt(positions.size()));
+        element.setPosition(position);
+        elements[position.x][position.y] = element;
+        setChanged();
+        notifyObservers();
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 
@@ -95,13 +142,13 @@ public class World implements IWorld, IWorldAnimal, IWorldSnake, IWorldFrog {
     return getElementByPosition(point.x, point.y);
   }
 
-    private Element getElementByPosition(int x, int y) {
-        if (canMoveTo(x, y)) {
-            return elements[x][y];
-        } else {
-            return new Death(new Point(x, y));
-        }
+  private Element getElementByPosition(int x, int y) {
+    if (canMoveTo(x, y)) {
+      return elements[x][y];
+    } else {
+      return new Death(new Point(x, y));
     }
+  }
 
   protected boolean canMoveTo(int x, int y) {
     return (x < properties.getWidthSize()
@@ -117,15 +164,15 @@ public class World implements IWorld, IWorldAnimal, IWorldSnake, IWorldFrog {
       if (elementByPosition instanceof Death) {
         isAlive = false;
         isRunned = false;
-        controller.gameOver();
+        //controller.gameOver();
       } else if (elementByPosition instanceof GreenFrogBody) {
-        frogController.resetPostion(elementByPosition);
+        frogs.get(elementByPosition).resetPosition();
         snake.addBodySegment();
         scorePlus();
       } else if (elementByPosition instanceof SnakeBody) {
         isAlive = false;
         isRunned = false;
-        controller.gameOver();
+        //controller.gameOver();
       }
     }
     return isAlive;
@@ -133,7 +180,6 @@ public class World implements IWorld, IWorldAnimal, IWorldSnake, IWorldFrog {
 
   private void scorePlus() {
     score++;
-    controller.updateScore(score);
   }
 
   @Override

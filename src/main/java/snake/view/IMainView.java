@@ -25,4 +25,6 @@ public interface IMainView {
   void enableStopButton();
 
   void changeTextStartButtonToStart();
+
+  void updateMap(Element[][] elements);
 }
