@@ -93,17 +93,14 @@ public class Snake implements Runnable {
       SnakeBody snakeBody = new SnakeBody(position);
       snakeBodyList.addFirst(snakeBody);
       addChange(snakeBody,snakeBody.getPosition());
-      //world.moveElement(snakeBody, snakeBody.getPosition());
       addBodyCount--;
     } else {
       if (!snakeBodyList.isEmpty()) {
         snakeBodyList.addFirst(snakeBodyList.getLast());
         snakeBodyList.removeLast();
         addChange(snakeBodyList.getFirst(),position);
-        //world.moveElement(snakeBodyList.getFirst(), position);
       }
       addChange(snakeTail,newTailPosition);
-      world.moveElement(snakeTail, newTailPosition);
     }
   }
 

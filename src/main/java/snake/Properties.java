@@ -1,11 +1,11 @@
 package snake;
 
 public class Properties {
-  private int heightSize = 20;
-  private int widthSize = 20;
+  private int heightSize = 10;
+  private int widthSize = 10;
   private int snakeSize = 5;
-  private int frogNumber = 10;
-  private int snakeSleep = 300;
+  private int frogNumber = 95;
+  private int snakeSleep = 500;
 
   public boolean parse(String[] args) {
     boolean problem = false;

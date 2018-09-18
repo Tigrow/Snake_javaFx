@@ -9,6 +9,7 @@ import snake.model.animal.Snake;
 import snake.model.animal.elements.frog.FrogBody;
 import snake.model.animal.elements.frog.GreenFrogBody;
 import snake.model.animal.elements.snake.SnakeBody;
+import snake.model.animal.elements.snake.SnakeDetails;
 import snake.model.animal.elements.snake.SnakeHead;
 import snake.model.animal.elements.snake.SnakeTail;
 
@@ -96,18 +97,29 @@ public class World extends Observable implements IWorld, IWorldAnimal, IWorldSna
     isRunned = false;
   }
 
-  public synchronized void moveElements(List<Element> elementList, List<Point> newPositions) {
+  public void moveElements(List<Element> elementList, List<Point> newPositions) {
+   /* Collections.reverse(elementList);
+    Collections.reverse(newPositions);*/
+    boolean moveFlag = true;
     synchronized (elements) {
       for (int i = 0; i < elementList.size(); i++) {
-        if (!moveElement(elementList.get(i), newPositions.get(i))) {
-          return;
+        if (!collision(elementList.get(i), newPositions.get(i)))
+          moveFlag = false;
+      }
+      if (moveFlag) {
+        for (int i = 0; i < elementList.size(); i++) {
+          elements[elementList.get(i).getPosition().x][elementList.get(i).getPosition().y] = null;
+          elementList.get(i).setPosition(newPositions.get(i));
+          elements[newPositions.get(i).x][newPositions.get(i).y] = elementList.get(i);
         }
       }
+      setChanged();
+      notifyObservers();
     }
   }
 
   @Override
-  public synchronized boolean moveElement(Element element, Point newPosition) {
+  public boolean moveElement(Element element, Point newPosition) {
     synchronized (elements) {
       boolean move = collision(element, newPosition);
       if (move) {
@@ -169,7 +181,7 @@ public class World extends Observable implements IWorld, IWorldAnimal, IWorldSna
         frogs.get(elementByPosition).resetPosition();
         snake.addBodySegment();
         scorePlus();
-      } else if (elementByPosition instanceof SnakeBody) {
+      } else if (elementByPosition instanceof SnakeDetails) {
         isAlive = false;
         isRunned = false;
         //controller.gameOver();

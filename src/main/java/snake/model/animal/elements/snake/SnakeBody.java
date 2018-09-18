@@ -1,15 +1,13 @@
 package snake.model.animal.elements.snake;
 
-import snake.model.animal.elements.Element;
+import java.awt.*;
 
-import java.awt.Point;
-
-public class SnakeBody extends Element {
-  public SnakeBody() {
-    super();
-  }
-
+public class SnakeBody extends SnakeDetails {
   public SnakeBody(Point position) {
     super(position);
+  }
+
+  public SnakeBody() {
+    super();
   }
 }
