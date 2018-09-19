@@ -1,7 +1,7 @@
 package snake.view;
 
 import javafx.application.Platform;
-import javafx.fxml.Initializable;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,20 +12,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import snake.Main;
-import snake.controller.Controller;
-import snake.controller.IControllerView;
-import snake.model.animal.elements.*;
+import snake.model.animal.elements.Element;
 import snake.model.animal.elements.frog.GreenFrogBody;
 import snake.model.animal.elements.snake.SnakeBody;
 import snake.model.animal.elements.snake.SnakeHead;
 import snake.model.animal.elements.snake.SnakeTail;
 
-import java.net.URL;
-import java.util.HashMap;
-import java.util.ResourceBundle;
 
-
-public class MainView implements Initializable, IMainView {
+public class MainView extends ObservableView {
 
   private static final int CELL_SIZE = 30;
   private static final int HALF_CELL_SIZE = CELL_SIZE / 2;
@@ -38,25 +32,20 @@ public class MainView implements Initializable, IMainView {
   public Pane pane;
   public Button startButton;
   public Button stopButton;
-  private HashMap<Element, Circle> map;
   private Circle[][] circles;
-  private IControllerView controller;
 
+
+  /**
+   * Метод для отображения ошибки и корректированных параметров.
+   */
   @Override
-  public void initialize(URL location, ResourceBundle resources) {
-    map = new HashMap<>();
-    circles = new Circle[Main.properties.getWidthSize()][Main.properties.getHeightSize()];
-    controller = new Controller();
-    controller.init(this);
-  }
-
   public void showError() {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle("Error in params");
     alert.setHeaderText("you have a problem in the parameters");
     String errorMessage = "parameters corrected to \n"
             + "Snake size =" + Main.properties.getSnakeSize() + "\n"
-            + "Frog number = " + Main.properties.getFrogNumber() + "\n"
+            + "Green frog number = " + Main.properties.getGreenFrogNumber() + "\n"
             + "Snake sleep = " + Main.properties.getSnakeSleep() + "\n"
             + "Width size = " + Main.properties.getWidthSize() + "\n"
             + "Height size = " + Main.properties.getHeightSize() + "\n";
@@ -64,28 +53,56 @@ public class MainView implements Initializable, IMainView {
     alert.showAndWait();
   }
 
+  /**
+   * метод который отлавливает событие нажатия на кномпку "Start".
+   */
   public void onActionStartButton() {
-    controller.startGame();
+    this.setChanged();
+    this.notifyObservers(ViewChange.START_GAME);
   }
 
+  /**
+   * метод который отлавливает событие нажатия на кномпку "Stop".
+   */
   public void onActionStopButton() {
-    controller.stopGame();
+    this.setChanged();
+    this.notifyObservers(ViewChange.STOP_GAME);
   }
 
+  /**
+   * Метод обрабатывающий нажатие на Pane.
+   *
+   * @param mouseEvent - обеъект для распознания нажатой клавиши мыши
+   */
   public void onMouseClickedPane(MouseEvent mouseEvent) {
     if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-      controller.leftPressed();
+      this.setChanged();
+      this.notifyObservers(ViewChange.LEFT_PRESSED);
     } else if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-      controller.rightPressed();
+      this.setChanged();
+      this.notifyObservers(ViewChange.RIGHT_PRESSED);
     }
   }
 
+  /**
+   * Включает кнопку "Stop", и отключает кнопку "Start" в FX потоке.
+   */
   @Override
   public void gameStarted() {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        stopButton.setDisable(false);
+        startButton.setDisable(true);
+      }
+    });
   }
 
+  /**
+   * Отключает кнопку "Stop", включает кнопку "Start" и устанавливает на неё текс "New game" .
+   */
   @Override
-  public void gameStoped() {
+  public void gameStopped() {
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
@@ -96,80 +113,59 @@ public class MainView implements Initializable, IMainView {
     });
   }
 
+  /**
+   * Включает кнопку "Stop", выключает кнопку "Start" и устанавливает на неё текс "Start"
+   * в потоке FX.
+   */
   @Override
-  public void addElement(final Element element) {
+  public void newGame() {
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
-        Circle circle = getCircleByElements(element);
-        map.put(element, circle);
-        pane.getChildren().add(circle);
+        stopButton.setDisable(true);
+        startButton.setDisable(false);
+        startButton.setText("Start");
       }
     });
   }
 
+  /**
+   * Метод обнавляющий состояние карты во вью.
+   *
+   * @param elements - элементы карты на основание которых делается обновление представления.
+   */
   @Override
-  public void moveElement(final Element element) {
-    Platform.runLater(new Runnable() {
-      @Override
-      public void run() {
-        Circle circle = map.get(element);
-        if (circle == null) {
-          circle = getCircleByElements(element);
-        }
-        circle.setLayoutX(element.getPosition().x * CELL_SIZE + HALF_CELL_SIZE);
-        circle.setLayoutY(element.getPosition().y * CELL_SIZE + HALF_CELL_SIZE);
-      }
-    });
-  }
-
-  @Override
-  public void deleteElement(final Element element) {
-    Platform.runLater(new Runnable() {
-      @Override
-      public void run() {
-        Circle circle = map.get(element);
-        pane.getChildren().remove(circle);
-        map.remove(element);
-      }
-    });
-  }
-
-  private void addCircle(final Circle circle) {
-    Platform.runLater(new Runnable() {
-      @Override
-      public void run() {
-        pane.getChildren().add(circle);
-      }
-    });
-  }
-
   public void updateMap(final Element[][] elements) {
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
         for (int x = 0; x < Main.properties.getWidthSize(); x++) {
           for (int y = 0; y < Main.properties.getHeightSize(); y++) {
-            updateCircle(circles[x][y],elements[x][y]);
+            updateCircle(circles[x][y], elements[x][y]);
           }
         }
       }
     });
   }
 
-
+  /**
+   * Load game screen.
+   *
+   * @param width  - game screen width.
+   * @param height - game screen height.
+   */
   @Override
-  public void setSceen(int width, int height) {
+  public void loadScreen(int width, int height) {
     pane.getChildren().removeAll();
     pane.getChildren().clear();
     Rectangle rectangle = new Rectangle();
-    map = new HashMap<>();
     pane.getChildren().add(rectangle);
     rectangle.setX(0);
     rectangle.setY(0);
     rectangle.setWidth(CELL_SIZE * width);
     rectangle.setHeight(CELL_SIZE * height);
     rectangle.setFill(Color.BLACK);
+    circles = new Circle[Main.properties.getWidthSize()][Main.properties.getHeightSize()];
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
         circles[x][y] = new Circle(HEAD_SNAKE_RADIUS);
@@ -181,37 +177,17 @@ public class MainView implements Initializable, IMainView {
     }
   }
 
+  /**
+   * Метод устанавливающий счёч игры.
+   *
+   * @param score - счёт который будет установлен в labelScore.
+   */
   @Override
   public void setScore(final int score) {
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
         labelScore.setText(Integer.toString(score));
-      }
-    });
-  }
-
-  @Override
-  public void disableStartButton() {
-    startButton.setDisable(true);
-  }
-
-  @Override
-  public void disableStopButton() {
-    stopButton.setDisable(true);
-  }
-
-  @Override
-  public void enableStopButton() {
-    stopButton.setDisable(false);
-  }
-
-  @Override
-  public void changeTextStartButtonToStart() {
-    Platform.runLater(new Runnable() {
-      @Override
-      public void run() {
-        startButton.setText("Start");
       }
     });
   }
@@ -236,23 +212,5 @@ public class MainView implements Initializable, IMainView {
     } else {
       circle.setVisible(false);
     }
-  }
-
-  private Circle getCircleByElements(Element element) {
-    Circle circle = null;
-    if (element instanceof SnakeHead) {
-      circle = new Circle(HEAD_SNAKE_RADIUS);
-      circle.setFill(Color.YELLOW);
-    } else if (element instanceof SnakeTail) {
-      circle = new Circle(TAIL_SNAKE_RADIUS);
-      circle.setFill(Color.YELLOW);
-    } else if (element instanceof SnakeBody) {
-      circle = new Circle(BODY_SNAKE_RADIUS);
-      circle.setFill(Color.YELLOW);
-    } else if (element instanceof GreenFrogBody) {
-      circle = new Circle(BODY_FROG_RADIUS);
-      circle.setFill(Color.GREEN);
-    }
-    return circle;
   }
 }
