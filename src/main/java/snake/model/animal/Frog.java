@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.util.List;
 import java.util.Random;
 
-import snake.model.IWorldFrog;
 import snake.model.World;
 import snake.model.animal.elements.frog.FrogBody;
 
@@ -26,10 +25,12 @@ public class Frog<T extends FrogBody> implements Runnable {
 
   private void move() {
     Random random = new Random();
-    List<Point> positions = world.getFreePosition(body.getPosition());
-    if (positions.size() > 0) {
-      Point point = positions.get(random.nextInt(positions.size()));
-      world.moveElement(body, point);
+    synchronized (world) {
+      List<Point> positions = world.getFreePosition(body.getPosition());
+      if (positions.size() > 0) {
+        Point point = positions.get(random.nextInt(positions.size()));
+        world.moveElement(body, point);
+      }
     }
   }
 
@@ -44,7 +45,7 @@ public class Frog<T extends FrogBody> implements Runnable {
 
   @Override
   public void run() {
-    while (world.isRunned()) {
+    while (world.isRunning()) {
       move();
       try {
         Thread.sleep(sleep);

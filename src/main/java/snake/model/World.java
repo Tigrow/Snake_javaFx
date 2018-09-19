@@ -1,31 +1,32 @@
 package snake.model;
 
-import snake.Properties;
-import snake.controller.IControllerModel;
-import snake.model.animal.Frog;
-import snake.model.animal.elements.*;
-import snake.model.animal.Snake;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
+import snake.Properties;
+import snake.model.animal.Frog;
+import snake.model.animal.Snake;
+import snake.model.animal.elements.Death;
+import snake.model.animal.elements.Direction;
+import snake.model.animal.elements.Element;
 import snake.model.animal.elements.frog.FrogBody;
 import snake.model.animal.elements.frog.GreenFrogBody;
 import snake.model.animal.elements.snake.SnakeBody;
 import snake.model.animal.elements.snake.SnakeDetails;
 import snake.model.animal.elements.snake.SnakeHead;
-import snake.model.animal.elements.snake.SnakeTail;
 
-import java.awt.Point;
-import java.util.*;
 
-public class World extends Observable implements IWorld, IWorldAnimal, IWorldSnake, IWorldFrog {
-  private Element[][] elements;
+public class World extends ObservableWorld implements IWorld, IWorldAnimal, IWorldSnake, IWorldFrog {
+  private final Element[][] elements;
   private Snake snake;
-  private boolean isRunned = false;
+  private boolean running = false;
   private HashMap<FrogBody, Frog> frogs;
   private Thread snakeThread;
   private List<Thread> frogThreads;
-  private IControllerModel controller;
   private Direction dir = Direction.NONE;
-  //private FrogController frogController;
   private Properties properties;
   private int score = 0;
 
@@ -34,10 +35,6 @@ public class World extends Observable implements IWorld, IWorldAnimal, IWorldSna
     elements = new Element[properties.getWidthSize()][properties.getHeightSize()];
     frogs = new HashMap<>();
     frogThreads = new ArrayList<>();
-    //frogController = new FrogController(properties, this);
-    //    //frogThread = new Thread(frogController);
-    //    //frogThread.setDaemon(true);
-    //controller.setSceen(properties.getWidthSize(), properties.getHeightSize());
   }
 
   @Override
@@ -45,14 +42,14 @@ public class World extends Observable implements IWorld, IWorldAnimal, IWorldSna
     snake = new Snake(properties, this);
     snakeThread = new Thread(snake);
     snakeThread.setDaemon(true);
-    for (int i = 0; i < properties.getFrogNumber(); i++) {
+    for (int i = 0; i < properties.getGreenFrogNumber(); i++) {
       addFrogs();
     }
   }
 
   private void addFrogs() {
     FrogBody frogBody = new GreenFrogBody();
-    Frog frog = new Frog(frogBody, properties.getSnakeSleep() * 2, this);
+    Frog<FrogBody> frog = new Frog<>(frogBody, properties.getSnakeSleep() * 2, this);
     Thread frogThread = new Thread(frog);
     frogThread.setDaemon(true);
     frogThreads.add(frogThread);
@@ -68,14 +65,14 @@ public class World extends Observable implements IWorld, IWorldAnimal, IWorldSna
   }
 
   @Override
-  public boolean isRunned() {
-    return isRunned;
+  public boolean isRunning() {
+    return running;
   }
 
 
   @Override
   public void startGame() {
-    isRunned = true;
+    running = true;
     snakeThread.start();
     for (Thread frogThread : frogThreads) {
       frogThread.start();
@@ -94,28 +91,7 @@ public class World extends Observable implements IWorld, IWorldAnimal, IWorldSna
 
   @Override
   public void stopGame() {
-    isRunned = false;
-  }
-
-  public void moveElements(List<Element> elementList, List<Point> newPositions) {
-   /* Collections.reverse(elementList);
-    Collections.reverse(newPositions);*/
-    boolean moveFlag = true;
-    synchronized (elements) {
-      for (int i = 0; i < elementList.size(); i++) {
-        if (!collision(elementList.get(i), newPositions.get(i)))
-          moveFlag = false;
-      }
-      if (moveFlag) {
-        for (int i = 0; i < elementList.size(); i++) {
-          elements[elementList.get(i).getPosition().x][elementList.get(i).getPosition().y] = null;
-          elementList.get(i).setPosition(newPositions.get(i));
-          elements[newPositions.get(i).x][newPositions.get(i).y] = elementList.get(i);
-        }
-      }
-      setChanged();
-      notifyObservers();
-    }
+    running = false;
   }
 
   @Override
@@ -127,7 +103,7 @@ public class World extends Observable implements IWorld, IWorldAnimal, IWorldSna
         element.setPosition(newPosition);
         elements[newPosition.x][newPosition.y] = element;
         setChanged();
-        notifyObservers();
+        notifyObservers(WorldChange.ELEMENT_MOVED);
       }
       return move;
     }
@@ -175,16 +151,18 @@ public class World extends Observable implements IWorld, IWorldAnimal, IWorldSna
     if (element instanceof SnakeHead) {
       if (elementByPosition instanceof Death) {
         isAlive = false;
-        isRunned = false;
-        //controller.gameOver();
+        running = false;
+        setChanged();
+        notifyObservers(WorldChange.GAME_OVER);
       } else if (elementByPosition instanceof GreenFrogBody) {
         frogs.get(elementByPosition).resetPosition();
         snake.addBodySegment();
         scorePlus();
-      } else if (elementByPosition instanceof SnakeDetails) {
+      } else if (elementByPosition instanceof SnakeBody) {
         isAlive = false;
-        isRunned = false;
-        //controller.gameOver();
+        running = false;
+        setChanged();
+        notifyObservers(WorldChange.GAME_OVER);
       }
     }
     return isAlive;
@@ -192,6 +170,8 @@ public class World extends Observable implements IWorld, IWorldAnimal, IWorldSna
 
   private void scorePlus() {
     score++;
+    setChanged();
+    notifyObservers(WorldChange.SCORE_CHANGED);
   }
 
   @Override
@@ -206,7 +186,6 @@ public class World extends Observable implements IWorld, IWorldAnimal, IWorldSna
     }
     return positionList;
   }
-
 
   @Override
   public List<Point> getFreePosition(Point position) {

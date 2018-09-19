@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface IWorldFrog extends IWorldAnimal {
 
-    List<Point> getAllFreePosition();
+  List<Point> getAllFreePosition();
 
-    List<Point> getFreePosition(Point position);
+  List<Point> getFreePosition(Point position);
 }
