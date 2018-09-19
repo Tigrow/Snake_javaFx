@@ -1,94 +1,90 @@
 package snake.controller;
 
-import snake.Main;
-import snake.model.IWorld;
-import snake.model.World;
-import snake.model.animal.elements.Direction;
-import snake.model.animal.elements.Element;
-import snake.view.IMainView;
+import com.sun.istack.internal.NotNull;
 
 import java.util.Observable;
 import java.util.Observer;
 
-public class Controller implements IControllerModel, IControllerView, Observer {
-  private World world;
-  private IMainView mainView;
-  private boolean statusGame;
+import snake.Main;
+import snake.model.ObservableWorld;
+import snake.model.World;
+import snake.model.WorldChange;
+import snake.model.animal.elements.Direction;
+import snake.view.ObservableView;
+import snake.view.ViewChange;
 
-  private void newGame() {
-    world = new World(Main.properties);
-    world.addObserver(this);
-    mainView.setSceen(Main.properties.getWidthSize(),Main.properties.getHeightSize());
-    world.loadGame();
-    mainView.disableStopButton();
-    statusGame = true;
-  }
 
-  @Override
-  public void update(Observable o, Object arg) {
-    mainView.setScore(world.getScore());
-    mainView.updateMap(world.getElements());
-  }
+public class Controller implements Observer {
+  private ObservableWorld world;
+  private ObservableView mainView;
+  private boolean gameLoaded;
 
-  @Override
-  public void init(IMainView mainView) {
+  public Controller(@NotNull ObservableView mainView) {
     this.mainView = mainView;
+    mainView.addObserver(this);
     newGame();
   }
 
   @Override
-  public void startGame() {
-    if (statusGame) {
-      world.startGame();
-      mainView.disableStartButton();
-      mainView.enableStopButton();
-    } else {
-      newGame();
-      mainView.changeTextStartButtonToStart();
+  public void update(Observable observable, Object arg) {
+    if (observable instanceof ObservableWorld) {
+      WorldChange change = (WorldChange) arg;
+      if (change == WorldChange.ELEMENT_MOVED) {
+        mainView.updateMap(world.getElements());
+      } else if (change == WorldChange.SCORE_CHANGED) {
+        mainView.setScore(world.getScore());
+      } else if (change == WorldChange.GAME_OVER) {
+        mainView.gameStopped();
+        gameLoaded = false;
+      }
+    } else if (observable instanceof ObservableView) {
+      ViewChange change = (ViewChange) arg;
+      if (change == ViewChange.START_GAME) {
+        startGame();
+      } else if (change == ViewChange.STOP_GAME) {
+        stopGame();
+      } else if (change == ViewChange.LEFT_PRESSED) {
+        leftPressed();
+      } else if (change == ViewChange.RIGHT_PRESSED) {
+        rightPressed();
+      }
     }
   }
 
-  @Override
-  public void leftPressed() {
+  private void startGame() {
+    if (gameLoaded) {
+      world.startGame();
+      mainView.gameStarted();
+    } else {
+      newGame();
+      mainView.newGame();
+    }
+  }
+
+  private void leftPressed() {
     world.changeDirection(Direction.LEFT);
   }
 
-  @Override
-  public void rightPressed() {
+  private void rightPressed() {
     world.changeDirection(Direction.RIGHT);
   }
 
-  @Override
-  public void stopGame() {
+  private void stopGame() {
     world.stopGame();
-    mainView.gameStoped();
-    statusGame = false;
+    mainView.gameStopped();
+    gameLoaded = false;
   }
 
- /* @Override
-  public void setSceen(int width, int height) {
-    mainView.setSceen(width, height);
-  }
-
-  @Override
-  public void updateElement(Element element, Changer changer) {
-    if (changer == Changer.add) {
-      mainView.addElement(element);
-    } else if (changer == Changer.move) {
-      mainView.moveElement(element);
-    } else if (changer == Changer.delete) {
-      mainView.deleteElement(element);
+  private void newGame() {
+    if (world != null) {
+      world.deleteObservers();
     }
+    world = new World(Main.properties);
+    world.addObserver(this);
+    mainView.loadScreen(Main.properties.getWidthSize(), Main.properties.getHeightSize());
+    world.loadGame();
+    mainView.setScore(world.getScore());
+    mainView.newGame();
+    gameLoaded = true;
   }
-
-  @Override
-  public void gameOver() {
-    mainView.gameStoped();
-    statusGame = false;
-  }
-
-  @Override
-  public void updateScore(int score) {
-    mainView.setScore(score);
-  }*/
 }
