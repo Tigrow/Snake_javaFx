@@ -1,17 +1,23 @@
 package snake;
 
 public class Properties {
-  private int heightSize = 10;
-  private int widthSize = 10;
-  private int snakeSize = 5;
-  private int frogNumber = 95;
-  private int snakeSleep = 500;
+  private static final int HEIGHT = 10;
+  private static final int WIDTH = 10;
+  private static final int SNAKE_SIZE = 5;
+  private static final int GREEN_FROG_NUMBER = 95;
+  private static final int SNAKE_SLEEP = 500;
+
+  private int heightSize = HEIGHT;
+  private int widthSize = WIDTH;
+  private int snakeSize = SNAKE_SIZE;
+  private int greenFrogNumber = GREEN_FROG_NUMBER;
+  private int snakeSleep = SNAKE_SLEEP;
 
   public boolean parse(String[] args) {
     boolean problem = false;
-    for (int i = 0; i < args.length; i++) {
+    for (String arg : args) {
       try {
-        parseOne(args[i]);
+        parseOne(arg);
       } catch (NumberFormatException | NullPointerException ex) {
         problem = true;
       }
@@ -34,7 +40,7 @@ public class Properties {
       snakeSize = Integer.parseInt(snake);
     } else if (arg.contains("-frog_number=")) {
       String frog = arg.split("=")[1];
-      frogNumber = Integer.parseInt(frog);
+      greenFrogNumber = Integer.parseInt(frog);
     } else if (arg.contains("-snake_sleep=")) {
       String sleep = arg.split("=")[1];
       snakeSleep = Integer.parseInt(sleep);
@@ -46,8 +52,8 @@ public class Properties {
     if (snakeSize > widthSize) {
       snakeSize = widthSize;
       problem = true;
-    } else if ((frogNumber + snakeSize) > (heightSize * widthSize)) {
-      frogNumber = heightSize * widthSize / 10;
+    } else if ((greenFrogNumber + snakeSize) > (heightSize * widthSize)) {
+      greenFrogNumber = heightSize * widthSize / 10;
       problem = true;
     }
     return problem;
@@ -69,8 +75,7 @@ public class Properties {
     return snakeSize;
   }
 
-  public int getFrogNumber() {
-    return frogNumber;
+  public int getGreenFrogNumber() {
+    return greenFrogNumber;
   }
-
 }

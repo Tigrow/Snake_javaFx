@@ -43,7 +43,7 @@
             </padding>
         </Label>
     </HBox>
-    <Separator prefWidth="200.0" />
+    <Separator />
    <Pane fx:id="pane" onMouseClicked="#onMouseClickedPane">
       <VBox.margin>
          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
