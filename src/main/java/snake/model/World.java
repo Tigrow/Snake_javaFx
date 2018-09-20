@@ -171,27 +171,18 @@ public class World extends ObservableWorld {
    * @return - возвращает коллекцию позиций на карте не занятых элементами
    */
   public List<Point> getFreePosition(Point position) {
-    Point positionLeft = (Point) position.clone();
-    positionLeft.translate(-1, 0);
-    Point positionRight = (Point) position.clone();
-    positionRight.translate(1, 0);
-    Point positionUp = (Point) position.clone();
-    positionUp.translate(0, 1);
-    Point positionDown = (Point) position.clone();
-    positionDown.translate(0, -1);
-
     List<Point> freePosition = new ArrayList<>();
-    if (getElementByPosition(positionLeft) == null) {
-      freePosition.add(positionLeft);
+    if (getElementByPosition(position.x - 1, position.y) == null) {
+      freePosition.add(new Point(position.x - 1, position.y));
     }
-    if (getElementByPosition(positionRight) == null) {
-      freePosition.add(positionRight);
+    if (getElementByPosition(position.x + 1, position.y) == null) {
+      freePosition.add(new Point(position.x + 1, position.y));
     }
-    if (getElementByPosition(positionUp) == null) {
-      freePosition.add(positionUp);
+    if (getElementByPosition(position.x, position.y + 1) == null) {
+      freePosition.add(new Point(position.x, position.y + 1));
     }
-    if (getElementByPosition(positionDown) == null) {
-      freePosition.add(positionDown);
+    if (getElementByPosition(position.x, position.y - 1) == null) {
+      freePosition.add(new Point(position.x, position.y - 1));
     }
     return freePosition;
   }
