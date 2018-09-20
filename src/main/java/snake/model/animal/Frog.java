@@ -17,6 +17,7 @@ public class Frog<T extends FrogBody> implements Runnable {
   private T body;
   private int sleep;
   private final World world;
+  private boolean alive;
 
   /**
    * Получить тело данной лягушки.
@@ -42,15 +43,20 @@ public class Frog<T extends FrogBody> implements Runnable {
   }
 
   /**
-   * Метод выполняющий перемешение лягушки на новое случайное место.
+   * Устанавливает статус лягушки - убита. После чего, лягушка будет пытаться возродить себя.
    */
-  public void resetPosition() {
+  public void kill() {
+    alive = false;
+  }
+
+  private void resetPosition() {
     Random random = new Random();
     synchronized (world) {
       List<Point> positions = world.getAllFreePosition();
       if (positions.size() > 0) {
         Point point = positions.get(random.nextInt(positions.size()));
         world.moveElement(body, point);
+        alive = true;
       }
     }
   }
@@ -72,7 +78,11 @@ public class Frog<T extends FrogBody> implements Runnable {
   @Override
   public void run() {
     while (world.isRunning()) {
-      move();
+      if (alive) {
+        move();
+      } else {
+        resetPosition();
+      }
       try {
         Thread.sleep(sleep);
       } catch (InterruptedException e) {

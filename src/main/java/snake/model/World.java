@@ -144,7 +144,7 @@ public class World extends ObservableWorld {
         setChanged();
         notifyObservers(WorldChange.GAME_OVER);
       } else if (elementByPosition instanceof GreenFrogBody) {
-        frogs.get(elementByPosition).resetPosition();
+        frogs.get(elementByPosition).kill();
         snake.addBodySegment();
         scorePlus();
       } else if (elementByPosition instanceof SnakeBody) {
