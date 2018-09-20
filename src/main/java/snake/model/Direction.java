@@ -1,4 +1,4 @@
-package snake.model.animal.elements;
+package snake.model;
 
 /**
  * Enum класс для изменения направления змеи.

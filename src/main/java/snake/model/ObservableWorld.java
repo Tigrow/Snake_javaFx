@@ -2,7 +2,6 @@ package snake.model;
 
 import java.util.Observable;
 
-import snake.model.animal.elements.Direction;
 import snake.model.animal.elements.Element;
 
 public abstract class ObservableWorld extends Observable {

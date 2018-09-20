@@ -9,7 +9,7 @@ import snake.Main;
 import snake.model.ObservableWorld;
 import snake.model.World;
 import snake.model.WorldChange;
-import snake.model.animal.elements.Direction;
+import snake.model.Direction;
 import snake.view.ObservableView;
 import snake.view.ViewChange;
 

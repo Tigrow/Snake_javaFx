@@ -9,7 +9,6 @@ import snake.Properties;
 import snake.model.animal.Frog;
 import snake.model.animal.Snake;
 import snake.model.animal.elements.Death;
-import snake.model.animal.elements.Direction;
 import snake.model.animal.elements.Element;
 import snake.model.animal.elements.frog.FrogBody;
 import snake.model.animal.elements.frog.GreenFrogBody;

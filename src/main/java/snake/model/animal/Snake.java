@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 import snake.Properties;
 import snake.model.World;
-import snake.model.animal.elements.Direction;
+import snake.model.Direction;
 import snake.model.animal.elements.snake.SnakeBody;
 import snake.model.animal.elements.snake.SnakeHead;
 import snake.model.animal.elements.snake.SnakeTail;
