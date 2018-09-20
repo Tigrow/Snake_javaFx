@@ -7,15 +7,33 @@ import java.util.Random;
 import snake.model.World;
 import snake.model.animal.elements.frog.FrogBody;
 
+/**
+ * Класс характеризующий поведение лягушки, и реализующий
+ * Runnable для запуска в отдельном потоке.
+ *
+ * @param <T> - Тип тела которым характеризуется лягушка.
+ */
 public class Frog<T extends FrogBody> implements Runnable {
   private T body;
   private int sleep;
-  private  final World world;
+  private final World world;
 
+  /**
+   * Получить тело данной лягушки.
+   *
+   * @return - возвращает тело.
+   */
   public T getFrogBody() {
     return body;
   }
 
+  /**
+   * Инициализация лягушки.
+   *
+   * @param frogBody - тело которое присвоено лягушке.
+   * @param sleep    - время засыпания лягушки.
+   * @param world    - мир в котором находится лягушка.
+   */
   public Frog(T frogBody, int sleep, World world) {
     this.world = world;
     this.sleep = sleep;
@@ -23,6 +41,9 @@ public class Frog<T extends FrogBody> implements Runnable {
     resetPosition();
   }
 
+  /**
+   * Метод выполняющий перемешение лягушки на новое случайное место.
+   */
   public void resetPosition() {
     Random random = new Random();
     synchronized (world) {
@@ -34,7 +55,9 @@ public class Frog<T extends FrogBody> implements Runnable {
     }
   }
 
-
+  /**
+   * Метод вызывающийся когда ляшушка должна быть перемещена.
+   */
   protected void move() {
     Random random = new Random();
     synchronized (world) {
