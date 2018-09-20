@@ -8,7 +8,7 @@ import java.util.List;
 import snake.Properties;
 import snake.model.animal.Frog;
 import snake.model.animal.Snake;
-import snake.model.animal.elements.Death;
+import snake.model.animal.elements.Wall;
 import snake.model.animal.elements.Element;
 import snake.model.animal.elements.frog.FrogBody;
 import snake.model.animal.elements.frog.GreenFrogBody;
@@ -107,7 +107,7 @@ public class World extends ObservableWorld {
     if (canMoveTo(x, y)) {
       return elements[x][y];
     } else {
-      return new Death(new Point(x, y));
+      return new Wall(new Point(x, y));
     }
   }
 
@@ -122,7 +122,7 @@ public class World extends ObservableWorld {
     boolean isAlive = true;
     Element elementByPosition = getElementByPosition(newPosition);
     if (element instanceof SnakeHead) {
-      if (elementByPosition instanceof Death) {
+      if (elementByPosition instanceof Wall) {
         isAlive = false;
         running = false;
         setChanged();

@@ -2,8 +2,8 @@ package snake.model.animal.elements;
 
 import java.awt.Point;
 
-public class Death extends Element {
-  public Death(Point position) {
+public class Wall extends Element {
+  public Wall(Point position) {
     super(position);
   }
 }
