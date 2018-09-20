@@ -1,10 +1,13 @@
 package snake;
 
+/**
+ * Класс считывающий и корректирующий настройки программы.
+ */
 public class Properties {
   private static final int HEIGHT = 10;
   private static final int WIDTH = 10;
   private static final int SNAKE_SIZE = 5;
-  private static final int GREEN_FROG_NUMBER = 95;
+  private static final int GREEN_FROG_NUMBER = 10;
   private static final int SNAKE_SLEEP = 500;
 
   private int heightSize = HEIGHT;
@@ -13,6 +16,12 @@ public class Properties {
   private int greenFrogNumber = GREEN_FROG_NUMBER;
   private int snakeSleep = SNAKE_SLEEP;
 
+  /**
+   * Метод выполняющий проход по массиву аргументов и проверяет их на валидность.
+   * @param args - аргументы приходящие в метод.
+   * @return возвращает true если были обнаруженны проблеммы при парсинге массива, и значения были корретированы
+   * в противном случае возвращает false.
+   */
   public boolean parse(String[] args) {
     boolean problem = false;
     for (String arg : args) {
@@ -53,7 +62,7 @@ public class Properties {
       snakeSize = widthSize;
       problem = true;
     } else if ((greenFrogNumber + snakeSize) > (heightSize * widthSize)) {
-      greenFrogNumber = heightSize * widthSize / 10;
+      greenFrogNumber = heightSize * widthSize / HEIGHT;
       problem = true;
     }
     return problem;

@@ -8,7 +8,9 @@ import javafx.stage.Stage;
 import snake.controller.Controller;
 import snake.view.MainView;
 
-
+/**
+ * Главный класс который запускает всю программу.
+ */
 public class Main extends Application {
 
   public static Properties properties;
@@ -16,6 +18,7 @@ public class Main extends Application {
 
   /**
    * Initialize java program.
+   *
    * @param args - args which user send to program.
    */
   public static void main(String[] args) {
@@ -28,13 +31,13 @@ public class Main extends Application {
   public void start(Stage primaryStage) throws Exception {
     FXMLLoader loader = new FXMLLoader(getClass().getResource("resources/main.fxml"));
     Parent root = loader.load();
-    primaryStage.setTitle("Snake");
-    primaryStage.setScene(new Scene(root,500,500));
-    primaryStage.show();
     MainView mainView = loader.getController();
+    new Controller(mainView);
     if (problemProperties) {
       mainView.showError();
     }
-    new Controller(mainView);
+    primaryStage.setTitle("Snake");
+    primaryStage.setScene(new Scene(root));
+    primaryStage.show();
   }
 }

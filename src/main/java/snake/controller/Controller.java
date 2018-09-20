@@ -13,12 +13,18 @@ import snake.model.animal.elements.Direction;
 import snake.view.ObservableView;
 import snake.view.ViewChange;
 
-
+/**
+ * Этот класс выполняет связующую функцию между моделью и представлением.
+ */
 public class Controller implements Observer {
   private ObservableWorld world;
   private ObservableView mainView;
   private boolean gameLoaded;
 
+  /**
+   *  Конструктов в который в качестве параметров поступает @param mainView, и инициализируется наблюдение за ним.
+   * @param mainView - объект преставления.
+   */
   public Controller(@NotNull ObservableView mainView) {
     this.mainView = mainView;
     mainView.addObserver(this);

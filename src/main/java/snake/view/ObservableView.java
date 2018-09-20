@@ -1,7 +1,6 @@
 package snake.view;
 
 import java.util.Observable;
-
 import snake.model.animal.elements.Element;
 
 public abstract class ObservableView extends Observable {

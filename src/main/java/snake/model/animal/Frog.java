@@ -10,7 +10,7 @@ import snake.model.animal.elements.frog.FrogBody;
 public class Frog<T extends FrogBody> implements Runnable {
   private T body;
   private int sleep;
-  private World world;
+  private  final World world;
 
   public T getFrogBody() {
     return body;
@@ -23,7 +23,19 @@ public class Frog<T extends FrogBody> implements Runnable {
     resetPosition();
   }
 
-  private void move() {
+  public void resetPosition() {
+    Random random = new Random();
+    synchronized (world) {
+      List<Point> positions = world.getAllFreePosition();
+      if (positions.size() > 0) {
+        Point point = positions.get(random.nextInt(positions.size()));
+        world.moveElement(body, point);
+      }
+    }
+  }
+
+
+  protected void move() {
     Random random = new Random();
     synchronized (world) {
       List<Point> positions = world.getFreePosition(body.getPosition());
@@ -32,15 +44,6 @@ public class Frog<T extends FrogBody> implements Runnable {
         world.moveElement(body, point);
       }
     }
-  }
-
-  public void resetPosition() {
-    world.moveRandomPosition(body);
-  }
-
-  private Point getRandomPoint(List<Point> positions) {
-    Random random = new Random();
-    return positions.get(random.nextInt(positions.size()));
   }
 
   @Override

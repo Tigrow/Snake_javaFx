@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import snake.Properties;
 import snake.model.animal.Frog;
@@ -18,7 +17,7 @@ import snake.model.animal.elements.snake.SnakeBody;
 import snake.model.animal.elements.snake.SnakeHead;
 
 
-public class World extends ObservableWorld implements IWorld, IWorldAnimal, IWorldFrog {
+public class World extends ObservableWorld {
   private final Element[][] elements;
   private Snake snake;
   private boolean running = false;
@@ -62,11 +61,9 @@ public class World extends ObservableWorld implements IWorld, IWorldAnimal, IWor
     return score;
   }
 
-  @Override
   public boolean isRunning() {
     return running;
   }
-
 
   @Override
   public void startGame() {
@@ -87,7 +84,6 @@ public class World extends ObservableWorld implements IWorld, IWorldAnimal, IWor
     running = false;
   }
 
-  @Override
   public boolean moveElement(Element element, Point newPosition) {
     synchronized (elements) {
       boolean move = collision(element, newPosition);
@@ -104,23 +100,6 @@ public class World extends ObservableWorld implements IWorld, IWorldAnimal, IWor
     }
   }
 
-  public synchronized boolean moveRandomPosition(Element element) {
-    synchronized (elements) {
-      List<Point> positions = getAllFreePosition();
-      if (positions.size() > 0) {
-        Random random = new Random();
-        Point position = positions.get(random.nextInt(positions.size()));
-        element.setPosition(position);
-        elements[position.x][position.y] = element;
-        setChanged();
-        notifyObservers();
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
   private Element getElementByPosition(Point point) {
     return getElementByPosition(point.x, point.y);
   }
@@ -133,7 +112,7 @@ public class World extends ObservableWorld implements IWorld, IWorldAnimal, IWor
     }
   }
 
-  protected boolean canMoveTo(int x, int y) {
+  private boolean canMoveTo(int x, int y) {
     return (x < properties.getWidthSize()
             && y < properties.getHeightSize()
             && x >= 0
@@ -169,7 +148,6 @@ public class World extends ObservableWorld implements IWorld, IWorldAnimal, IWor
     notifyObservers(WorldChange.SCORE_CHANGED);
   }
 
-  @Override
   public List<Point> getAllFreePosition() {
     List<Point> positionList = new ArrayList<>();
     for (int x = 0; x < properties.getWidthSize(); x++) {
@@ -182,7 +160,6 @@ public class World extends ObservableWorld implements IWorld, IWorldAnimal, IWor
     return positionList;
   }
 
-  @Override
   public List<Point> getFreePosition(Point position) {
     Point positionLeft = (Point) position.clone();
     positionLeft.translate(-1, 0);
@@ -193,7 +170,7 @@ public class World extends ObservableWorld implements IWorld, IWorldAnimal, IWor
     Point positionDown = (Point) position.clone();
     positionDown.translate(0, -1);
 
-    List<Point> freePosition = new ArrayList<>(4);
+    List<Point> freePosition = new ArrayList<>();
     if (getElementByPosition(positionLeft) == null) {
       freePosition.add(positionLeft);
     }

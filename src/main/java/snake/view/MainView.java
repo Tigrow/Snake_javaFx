@@ -18,7 +18,9 @@ import snake.model.animal.elements.snake.SnakeBody;
 import snake.model.animal.elements.snake.SnakeHead;
 import snake.model.animal.elements.snake.SnakeTail;
 
-
+/**
+ * Реализация абстрактного класса ObservableView на основе JavaFx.
+ */
 public class MainView extends ObservableView {
 
   private static final int CELL_SIZE = 30;
