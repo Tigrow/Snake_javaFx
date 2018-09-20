@@ -151,10 +151,10 @@ public class MainView extends ObservableView {
   }
 
   /**
-   * Load game screen.
+   * Метод загружает игровое поле.
    *
-   * @param width  - game screen width.
-   * @param height - game screen height.
+   * @param width  - Ширина игровога поля.
+   * @param height - Высота игровога поля.
    */
   @Override
   public void loadScreen(int width, int height) {
@@ -210,7 +210,7 @@ public class MainView extends ObservableView {
     } else if (element instanceof GreenFrogBody) {
       circle.setVisible(true);
       circle.setRadius(BODY_FROG_RADIUS);
-      circle.setFill(Color.GREEN);
+      circle.setFill(Color.LIGHTGREEN);
     } else {
       circle.setVisible(false);
     }

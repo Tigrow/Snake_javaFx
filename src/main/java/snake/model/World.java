@@ -148,6 +148,10 @@ public class World extends ObservableWorld {
     notifyObservers(WorldChange.SCORE_CHANGED);
   }
 
+  /**
+   * Метод вычисляет все пустые клетки на карте.
+   * @return - возвращает коллекцию позиций пустых клеток.
+   */
   public List<Point> getAllFreePosition() {
     List<Point> positionList = new ArrayList<>();
     for (int x = 0; x < properties.getWidthSize(); x++) {
@@ -160,6 +164,12 @@ public class World extends ObservableWorld {
     return positionList;
   }
 
+  /**
+   * Данный метод на основании входной позиции, возвращает
+   * свободные позиции свободных клеток вокруг него.
+   * @param position - позиция вокруг которой проверяются точки
+   * @return - возвращает коллекцию позиций на карте не занятых элементами
+   */
   public List<Point> getFreePosition(Point position) {
     Point positionLeft = (Point) position.clone();
     positionLeft.translate(-1, 0);
