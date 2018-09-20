@@ -15,7 +15,9 @@ import snake.model.animal.elements.frog.GreenFrogBody;
 import snake.model.animal.elements.snake.SnakeBody;
 import snake.model.animal.elements.snake.SnakeHead;
 
-
+/**
+ * Основной класс описывающий весь мир игры змейка.
+ */
 public class World extends ObservableWorld {
   private final Element[][] elements;
   private Snake snake;
@@ -26,6 +28,11 @@ public class World extends ObservableWorld {
   private Properties properties;
   private int score = 0;
 
+  /**
+   * Инициализация модели с параметрами.
+   *
+   * @param properties - параметры для модели.
+   */
   public World(Properties properties) {
     this.properties = properties;
     elements = new Element[properties.getWidthSize()][properties.getHeightSize()];
@@ -83,6 +90,15 @@ public class World extends ObservableWorld {
     running = false;
   }
 
+  /**
+   * Перемещение элемента мира на новую позицию.
+   * Если в целевой клетке находиться какой либо объект отличный
+   * от null, то перемещение не происходит а метод возвращает false.
+   *
+   * @param element     - Элемент который надо переместить.
+   * @param newPosition - позиция на которую надо переместить элемент.
+   * @return - если перемещение произошло, то возвращает true
+   */
   public boolean moveElement(Element element, Point newPosition) {
     synchronized (elements) {
       boolean move = collision(element, newPosition);
