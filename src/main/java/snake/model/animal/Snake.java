@@ -17,6 +17,7 @@ public class Snake implements Runnable {
   private SnakeTail snakeTail;
   private LinkedList<SnakeBody> snakeBodyList;
   private Point dir = new Point(1, 0);
+  private Direction changeDirection;
   private int addBodyCount = 0;
 
   public Snake(Properties properties, World world) {
@@ -48,6 +49,10 @@ public class Snake implements Runnable {
 
   public void addBodySegment() {
     addBodyCount++;
+  }
+
+  public void setChangeDirection(Direction direction) {
+    changeDirection = direction;
   }
 
   private void move() {
@@ -86,14 +91,14 @@ public class Snake implements Runnable {
 
   private void changeDirection() {
     Point oldDir = (Point) dir.clone();
-    if (world.getDirection() == Direction.LEFT) {
+    if (changeDirection == Direction.LEFT) {
       dir.x = oldDir.y;
       dir.y = oldDir.x * -1;
-      world.changeDirection(Direction.NONE);
-    } else if (world.getDirection() == Direction.RIGHT) {
+      changeDirection = Direction.NONE;
+    } else if (changeDirection == Direction.RIGHT) {
       dir.x = oldDir.y * -1;
       dir.y = oldDir.x;
-      world.changeDirection(Direction.NONE);
+      changeDirection = Direction.NONE;
     }
   }
 }

@@ -15,18 +15,16 @@ import snake.model.animal.elements.Element;
 import snake.model.animal.elements.frog.FrogBody;
 import snake.model.animal.elements.frog.GreenFrogBody;
 import snake.model.animal.elements.snake.SnakeBody;
-import snake.model.animal.elements.snake.SnakeDetails;
 import snake.model.animal.elements.snake.SnakeHead;
 
 
-public class World extends ObservableWorld implements IWorld, IWorldAnimal, IWorldSnake, IWorldFrog {
+public class World extends ObservableWorld implements IWorld, IWorldAnimal, IWorldFrog {
   private final Element[][] elements;
   private Snake snake;
   private boolean running = false;
   private HashMap<FrogBody, Frog> frogs;
   private Thread snakeThread;
   private List<Thread> frogThreads;
-  private Direction dir = Direction.NONE;
   private Properties properties;
   private int score = 0;
 
@@ -81,12 +79,7 @@ public class World extends ObservableWorld implements IWorld, IWorldAnimal, IWor
 
   @Override
   public void changeDirection(Direction direction) {
-    dir = direction;
-  }
-
-  @Override
-  public Direction getDirection() {
-    return dir;
+    snake.setChangeDirection(direction);
   }
 
   @Override
@@ -99,7 +92,9 @@ public class World extends ObservableWorld implements IWorld, IWorldAnimal, IWor
     synchronized (elements) {
       boolean move = collision(element, newPosition);
       if (move) {
-        elements[element.getPosition().x][element.getPosition().y] = null;
+        if (elements[element.getPosition().x][element.getPosition().y] == element) {
+          elements[element.getPosition().x][element.getPosition().y] = null;
+        }
         element.setPosition(newPosition);
         elements[newPosition.x][newPosition.y] = element;
         setChanged();
