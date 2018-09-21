@@ -13,7 +13,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import snake.Main;
 import snake.model.animal.elements.Element;
-import snake.model.animal.elements.RedFrogBody;
+import snake.model.animal.elements.frog.RedFrogBody;
 import snake.model.animal.elements.frog.GreenFrogBody;
 import snake.model.animal.elements.snake.SnakeBody;
 import snake.model.animal.elements.snake.SnakeHead;
