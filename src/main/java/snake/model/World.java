@@ -8,8 +8,8 @@ import java.util.List;
 import snake.Properties;
 import snake.model.animal.Frog;
 import snake.model.animal.Snake;
-import snake.model.animal.elements.Wall;
 import snake.model.animal.elements.Element;
+import snake.model.animal.elements.Wall;
 import snake.model.animal.elements.frog.FrogBody;
 import snake.model.animal.elements.frog.GreenFrogBody;
 import snake.model.animal.elements.snake.SnakeBody;
@@ -45,18 +45,18 @@ public class World extends ObservableWorld {
     snake = new Snake(properties, this);
     snakeThread = new Thread(snake);
     snakeThread.setDaemon(true);
-    for (int i = 0; i < properties.getGreenFrogNumber(); i++) {
-      addFrogs();
-    }
+    addFrogs();
   }
 
   private void addFrogs() {
-    FrogBody frogBody = new GreenFrogBody();
-    Frog<FrogBody> frog = new Frog<>(frogBody, properties.getSnakeSleep() * 2, this);
-    Thread frogThread = new Thread(frog);
-    frogThread.setDaemon(true);
-    frogThreads.add(frogThread);
-    frogs.put(frogBody, frog);
+    for (int i = 0; i < properties.getGreenFrogNumber(); i++) {
+      FrogBody frogBody = new GreenFrogBody();
+      Frog<FrogBody> frog = new Frog<>(frogBody, properties.getSnakeSleep() * 2, this);
+      Thread frogThread = new Thread(frog);
+      frogThread.setDaemon(true);
+      frogThreads.add(frogThread);
+      frogs.put(frogBody, frog);
+    }
   }
 
   public Element[][] getElements() {
@@ -134,12 +134,12 @@ public class World extends ObservableWorld {
             && y >= 0);
   }
 
-  private boolean collision(Element element, Point newPosition) {
-    boolean isAlive = true;
+  protected boolean collision(Element element, Point newPosition) {
+    boolean alive = true;
     Element elementByPosition = getElementByPosition(newPosition);
     if (element instanceof SnakeHead) {
       if (elementByPosition instanceof Wall) {
-        isAlive = false;
+        alive = false;
         running = false;
         setChanged();
         notifyObservers(WorldChange.GAME_OVER);
@@ -148,13 +148,13 @@ public class World extends ObservableWorld {
         snake.addBodySegment();
         scorePlus();
       } else if (elementByPosition instanceof SnakeBody) {
-        isAlive = false;
+        alive = false;
         running = false;
         setChanged();
         notifyObservers(WorldChange.GAME_OVER);
       }
     }
-    return isAlive;
+    return alive;
   }
 
   private void scorePlus() {
