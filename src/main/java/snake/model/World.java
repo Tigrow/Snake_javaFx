@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import snake.Properties;
+import snake.model.animal.BrainyFrog;
 import snake.model.animal.Frog;
 import snake.model.animal.Snake;
 import snake.model.animal.elements.Element;
@@ -51,7 +52,8 @@ public class World extends ObservableWorld {
   private void addFrogs() {
     for (int i = 0; i < properties.getGreenFrogNumber(); i++) {
       FrogBody frogBody = new GreenFrogBody();
-      Frog<FrogBody> frog = new Frog<>(frogBody, properties.getSnakeSleep() * 2, this);
+      BrainyFrog<FrogBody> frog = new BrainyFrog<>(frogBody, properties.getSnakeSleep() * 2,
+              this, snake.getSnakeHeadPosition(), properties.getFrogIq());
       Thread frogThread = new Thread(frog);
       frogThread.setDaemon(true);
       frogThreads.add(frogThread);

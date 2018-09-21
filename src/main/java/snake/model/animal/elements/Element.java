@@ -13,14 +13,14 @@ public abstract class Element {
    *
    * @param position - позиция.
    */
-  public Element(Point position) {
+   protected Element(Point position) {
     this.position = position;
   }
 
   /**
    * Инициализация позиция объекта.
    */
-  public Element() {
+  protected Element() {
     this.position = new Point();
   }
 

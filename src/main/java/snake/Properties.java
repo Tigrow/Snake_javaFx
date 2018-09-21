@@ -9,12 +9,14 @@ public class Properties {
   private static final int SNAKE_SIZE = 5;
   private static final int GREEN_FROG_NUMBER = 10;
   private static final int SNAKE_SLEEP = 500;
+  private static final double FROG_IQ = 0.8;
 
   private int heightSize = HEIGHT;
   private int widthSize = WIDTH;
   private int snakeSize = SNAKE_SIZE;
   private int greenFrogNumber = GREEN_FROG_NUMBER;
   private int snakeSleep = SNAKE_SLEEP;
+  private double frogIq = FROG_IQ;
 
   /**
    * Метод выполняющий проход по массиву аргументов и проверяет их на валидность.
@@ -54,6 +56,9 @@ public class Properties {
     } else if (arg.contains("-snake_sleep=")) {
       String sleep = arg.split("=")[1];
       snakeSleep = Integer.parseInt(sleep);
+    } else if (arg.contains("frog_iq=")) {
+      String iq = arg.split("=")[1];
+      frogIq = Double.parseDouble(iq);
     }
   }
 
@@ -64,6 +69,9 @@ public class Properties {
       problem = true;
     } else if ((greenFrogNumber + snakeSize) > (heightSize * widthSize)) {
       greenFrogNumber = heightSize * widthSize / HEIGHT;
+      problem = true;
+    } else if (frogIq > 1) {
+      frogIq = FROG_IQ;
       problem = true;
     }
     return problem;
@@ -87,5 +95,9 @@ public class Properties {
 
   public int getGreenFrogNumber() {
     return greenFrogNumber;
+  }
+
+  public double getFrogIq() {
+    return frogIq;
   }
 }

@@ -6,10 +6,10 @@ import java.util.Observable;
 import java.util.Observer;
 
 import snake.Main;
+import snake.model.Direction;
 import snake.model.ObservableWorld;
 import snake.model.World;
 import snake.model.WorldChange;
-import snake.model.Direction;
 import snake.view.ObservableView;
 import snake.view.ViewChange;
 
@@ -22,7 +22,8 @@ public class Controller implements Observer {
   private boolean gameLoaded;
 
   /**
-   *  Конструктов в который в качестве параметров поступает @param mainView, и инициализируется наблюдение за ним.
+   *  Конструктов в который в качестве параметров поступает @param mainView,
+   * и инициализируется наблюдение за ним.
    * @param mainView - объект преставления.
    */
   public Controller(@NotNull ObservableView mainView) {

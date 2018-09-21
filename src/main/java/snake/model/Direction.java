@@ -6,5 +6,5 @@ package snake.model;
 public enum Direction {
   LEFT,
   RIGHT,
-  NONE;
+  NONE
 }
