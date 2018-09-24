@@ -22,6 +22,7 @@ public class World extends ObservableWorld {
   private final Element[][] elements;
   private Snake snake;
   private boolean running = false;
+  private boolean paused = false;
   private HashMap<FrogBody, Frog> frogs;
   private Thread snakeThread;
   private List<Thread> frogThreads;
@@ -73,6 +74,10 @@ public class World extends ObservableWorld {
 
   @Override
   public void startGame() {
+    if (paused) {
+      paused = false;
+      return;
+    }
     running = true;
     snakeThread.start();
     for (Thread frogThread : frogThreads) {
@@ -86,8 +91,17 @@ public class World extends ObservableWorld {
   }
 
   @Override
+  public void pauseGame() {
+    paused = true;
+  }
+
+  @Override
   public void stopGame() {
     running = false;
+  }
+
+  public boolean isPaused() {
+    return paused;
   }
 
   /**

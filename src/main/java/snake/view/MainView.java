@@ -2,6 +2,7 @@ package snake.view;
 
 import javafx.application.Platform;
 
+import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -34,6 +35,7 @@ public class MainView extends ObservableView {
   public Pane pane;
   public Button startButton;
   public Button stopButton;
+  public Button pauseButton;
   private Circle[][] circles;
 
 
@@ -53,6 +55,13 @@ public class MainView extends ObservableView {
             + "Height size = " + Main.properties.getHeightSize() + "\n";
     alert.setContentText(errorMessage);
     alert.showAndWait();
+  }
+
+  @Override
+  public void gamePaused() {
+    pauseButton.setDisable(true);
+    startButton.setText("Resume");
+    startButton.setDisable(false);
   }
 
   /**
@@ -96,6 +105,7 @@ public class MainView extends ObservableView {
       public void run() {
         stopButton.setDisable(false);
         startButton.setDisable(true);
+        pauseButton.setDisable(false);
       }
     });
   }
@@ -111,6 +121,7 @@ public class MainView extends ObservableView {
         stopButton.setDisable(true);
         startButton.setDisable(false);
         startButton.setText("New game");
+        pauseButton.setDisable(true);
       }
     });
   }
@@ -214,5 +225,10 @@ public class MainView extends ObservableView {
     } else {
       circle.setVisible(false);
     }
+  }
+
+  public void onActionPauseButton(ActionEvent actionEvent) {
+    this.setChanged();
+    this.notifyObservers(ViewChange.PAUSE_GAME);
   }
 }

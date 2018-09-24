@@ -49,4 +49,9 @@ public abstract class ObservableView extends Observable {
    * Метод который выводит сообщение об ошибке.
    */
   public abstract void showError();
+
+  /**
+   * Метод сообщает о том что игра поставлена на паузу.
+   */
+  public abstract void gamePaused();
 }

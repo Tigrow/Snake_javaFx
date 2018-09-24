@@ -22,7 +22,8 @@ public class Controller implements Observer {
   private boolean gameLoaded;
 
   /**
-   *  Конструктов в который в качестве параметров поступает @param mainView, и инициализируется наблюдение за ним.
+   * Конструктов в который в качестве параметров поступает @param mainView, и инициализируется наблюдение за ним.
+   *
    * @param mainView - объект преставления.
    */
   public Controller(@NotNull ObservableView mainView) {
@@ -53,8 +54,15 @@ public class Controller implements Observer {
         leftPressed();
       } else if (change == ViewChange.RIGHT_PRESSED) {
         rightPressed();
+      } else if (change == ViewChange.PAUSE_GAME) {
+        pauseGame();
       }
     }
+  }
+
+  private void pauseGame() {
+      mainView.gamePaused();
+      world.pauseGame();
   }
 
   private void startGame() {
