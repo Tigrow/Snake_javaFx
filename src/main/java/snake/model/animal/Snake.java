@@ -47,7 +47,9 @@ public class Snake implements Runnable {
   @Override
   public void run() {
     while (world.isRunning()) {
-      move();
+      if (!world.isPaused()) {
+        move();
+      }
       try {
         Thread.sleep(properties.getSnakeSleep());
       } catch (InterruptedException e) {

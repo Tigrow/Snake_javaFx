@@ -78,10 +78,12 @@ public class Frog<T extends FrogBody> implements Runnable {
   @Override
   public void run() {
     while (world.isRunning()) {
-      if (alive) {
-        move();
-      } else {
-        resetPosition();
+      if (!world.isPaused()) {
+        if (alive) {
+          move();
+        } else {
+          resetPosition();
+        }
       }
       try {
         Thread.sleep(sleep);

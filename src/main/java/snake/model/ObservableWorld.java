@@ -24,7 +24,7 @@ public abstract class ObservableWorld extends Observable {
   public abstract int getScore();
 
   /**
-   * Вызов старта игры.
+   * Вызов старта игры или возобновление игры.
    */
   public abstract void startGame();
 
@@ -44,4 +44,11 @@ public abstract class ObservableWorld extends Observable {
    * @param direction - направление.
    */
   public abstract void changeDirection(Direction direction);
+
+  /**
+   *  ставит игру на пазу.
+   */
+  public abstract void pauseGame();
+
+  public abstract boolean isPaused();
 }

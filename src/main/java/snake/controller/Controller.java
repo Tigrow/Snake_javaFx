@@ -54,8 +54,15 @@ public class Controller implements Observer {
         leftPressed();
       } else if (change == ViewChange.RIGHT_PRESSED) {
         rightPressed();
+      } else if (change == ViewChange.PAUSE_GAME) {
+        pauseGame();
       }
     }
+  }
+
+  private void pauseGame() {
+      mainView.gamePaused();
+      world.pauseGame();
   }
 
   private void startGame() {

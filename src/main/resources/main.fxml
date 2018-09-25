@@ -27,6 +27,14 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
             </padding>
         </Button>
+      <Button fx:id="pauseButton" disable="true" mnemonicParsing="false" onAction="#onActionPauseButton" text="Pause">
+         <HBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </HBox.margin>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </Button>
         <Label text="Score:">
             <HBox.margin>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
