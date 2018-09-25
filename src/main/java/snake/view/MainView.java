@@ -50,7 +50,8 @@ public class MainView extends ObservableView {
             + "Green frog number = " + Main.properties.getGreenFrogNumber() + "\n"
             + "Snake sleep = " + Main.properties.getSnakeSleep() + "\n"
             + "Width size = " + Main.properties.getWidthSize() + "\n"
-            + "Height size = " + Main.properties.getHeightSize() + "\n";
+            + "Height size = " + Main.properties.getHeightSize() + "\n"
+            + "Frog iq = " + Main.properties.getFrogIq();
     alert.setContentText(errorMessage);
     alert.showAndWait();
   }
