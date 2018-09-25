@@ -8,6 +8,7 @@ public class Properties {
   private static final int WIDTH = 10;
   private static final int SNAKE_SIZE = 5;
   private static final int GREEN_FROG_NUMBER = 10;
+  private static final int RED_FROG_NUMBER = 10;
   private static final int SNAKE_SLEEP = 500;
   private static final double FROG_IQ = 0.8;
 
@@ -15,6 +16,7 @@ public class Properties {
   private int widthSize = WIDTH;
   private int snakeSize = SNAKE_SIZE;
   private int greenFrogNumber = GREEN_FROG_NUMBER;
+  private int redFrogNumber = RED_FROG_NUMBER;
   private int snakeSleep = SNAKE_SLEEP;
   private double frogIq = FROG_IQ;
 
@@ -50,7 +52,7 @@ public class Properties {
     } else if (arg.contains("-snake_size=")) {
       String snake = arg.split("=")[1];
       snakeSize = Integer.parseInt(snake);
-    } else if (arg.contains("-frog_number=")) {
+    } else if (arg.contains("-green_frog_number=")) {
       String frog = arg.split("=")[1];
       greenFrogNumber = Integer.parseInt(frog);
     } else if (arg.contains("-snake_sleep=")) {
@@ -59,6 +61,9 @@ public class Properties {
     } else if (arg.contains("frog_iq=")) {
       String iq = arg.split("=")[1];
       frogIq = Double.parseDouble(iq);
+    } else if (arg.contains("-red_frog_number=")) {
+      String frog = arg.split("=")[1];
+      redFrogNumber = Integer.parseInt(frog);
     }
   }
 
@@ -67,8 +72,9 @@ public class Properties {
     if (snakeSize > widthSize) {
       snakeSize = widthSize;
       problem = true;
-    } else if ((greenFrogNumber + snakeSize) > (heightSize * widthSize)) {
+    } else if ((greenFrogNumber + redFrogNumber + snakeSize) > (heightSize * widthSize)) {
       greenFrogNumber = heightSize * widthSize / HEIGHT;
+      redFrogNumber = heightSize * widthSize / HEIGHT;
       problem = true;
     } else if (frogIq > 1) {
       frogIq = FROG_IQ;
@@ -99,5 +105,9 @@ public class Properties {
 
   public double getFrogIq() {
     return frogIq;
+  }
+
+  public int getRedFrogNumber() {
+    return redFrogNumber;
   }
 }

@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.sun.istack.internal.NotNull;
 import snake.Properties;
 import snake.model.animal.BrainyFrog;
 import snake.model.animal.Frog;
 import snake.model.animal.Snake;
 import snake.model.animal.elements.Element;
+import snake.model.animal.elements.frog.RedFrogBody;
 import snake.model.animal.elements.Wall;
 import snake.model.animal.elements.frog.FrogBody;
 import snake.model.animal.elements.frog.GreenFrogBody;
@@ -59,6 +61,14 @@ public class World extends ObservableWorld {
       frogThreads.add(frogThread);
       frogs.put(frogBody, frog);
     }
+    for (int i = 0; i < properties.getRedFrogNumber(); i++) {
+      FrogBody frogBody = new RedFrogBody();
+      Frog<FrogBody> frog = new Frog<>(frogBody, properties.getSnakeSleep() * 2, this);
+      Thread frogThread = new Thread(frog);
+      frogThread.setDaemon(true);
+      frogThreads.add(frogThread);
+      frogs.put(frogBody, frog);
+    }
   }
 
   public Element[][] getElements() {
@@ -101,11 +111,12 @@ public class World extends ObservableWorld {
    * @param newPosition - позиция на которую надо переместить элемент.
    * @return - если перемещение произошло, то возвращает true
    */
-  public boolean moveElement(Element element, Point newPosition) {
+  public boolean moveElement(@NotNull Element element, Point newPosition) {
     synchronized (elements) {
       boolean move = collision(element, newPosition);
       if (move) {
         if (elements[element.getPosition().x][element.getPosition().y] == element) {
+          clearPosition(element.getPosition());
           elements[element.getPosition().x][element.getPosition().y] = null;
         }
         element.setPosition(newPosition);
@@ -115,6 +126,10 @@ public class World extends ObservableWorld {
       }
       return move;
     }
+  }
+
+  public void clearPosition(Point position) {
+    elements[position.x][position.y] = null;
   }
 
   private Element getElementByPosition(Point point) {
@@ -154,6 +169,11 @@ public class World extends ObservableWorld {
         running = false;
         setChanged();
         notifyObservers(WorldChange.GAME_OVER);
+      } else if (elementByPosition instanceof RedFrogBody) {
+        frogs.get(elementByPosition).kill();
+        snake.deleteBodySegment();
+        scorePlus();
+        scorePlus();
       }
     }
     return alive;

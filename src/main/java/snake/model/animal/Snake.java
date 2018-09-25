@@ -75,6 +75,17 @@ public class Snake implements Runnable {
     changeDirection = direction;
   }
 
+  /**
+   * Метод удаляющий последний элемент змеи, и ставящий на это место хвост.
+   */
+  public void deleteBodySegment() {
+    if (snakeBodyList.size() + 2 > properties.getSnakeSize()) {
+      world.clearPosition(snakeBodyList.getLast().getPosition());
+      snakeBodyList.removeLast();
+      world.moveElement(snakeTail, snakeBodyList.getLast().getPosition());
+    }
+  }
+
   private void move() {
     changeDirection();
     moveHead();
