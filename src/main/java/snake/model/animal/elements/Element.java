@@ -24,6 +24,11 @@ public abstract class Element {
     this.position = new Point();
   }
 
+  /**
+   * Установка позиции.
+   *
+   * @param position - позиция.
+   */
   public void setPosition(Point position) {
     this.position.x = position.x;
     this.position.y = position.y;

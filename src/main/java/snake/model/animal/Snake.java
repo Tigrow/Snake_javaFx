@@ -10,6 +10,9 @@ import snake.model.animal.elements.snake.SnakeBody;
 import snake.model.animal.elements.snake.SnakeHead;
 import snake.model.animal.elements.snake.SnakeTail;
 
+/**
+ * Класс характеризующий змею и её поведение в мире.
+ */
 public class Snake implements Runnable {
   private Properties properties;
   private final World world;
@@ -20,6 +23,12 @@ public class Snake implements Runnable {
   private Direction changeDirection;
   private int addBodyCount = 0;
 
+  /**
+   * Инициализация начального положения змеи.
+   *
+   * @param properties - настройки мира.
+   * @param world      - экземпляр мира.
+   */
   public Snake(Properties properties, World world) {
     this.properties = properties;
     this.world = world;
@@ -47,10 +56,17 @@ public class Snake implements Runnable {
     }
   }
 
+  /**
+   * Метод добавляющий элемент к змее.
+   */
   public void addBodySegment() {
     addBodyCount++;
   }
 
+  /**
+   * Установка изменения направления.
+   * @param direction - направление.
+   */
   public void setChangeDirection(Direction direction) {
     changeDirection = direction;
   }
