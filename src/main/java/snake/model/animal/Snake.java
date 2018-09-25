@@ -4,8 +4,8 @@ import java.awt.Point;
 import java.util.LinkedList;
 
 import snake.Properties;
-import snake.model.World;
 import snake.model.Direction;
+import snake.model.World;
 import snake.model.animal.elements.snake.SnakeBody;
 import snake.model.animal.elements.snake.SnakeHead;
 import snake.model.animal.elements.snake.SnakeTail;
@@ -54,6 +54,10 @@ public class Snake implements Runnable {
         e.printStackTrace();
       }
     }
+  }
+
+  public Point getSnakeHeadPosition() {
+    return snakeHead.getPosition();
   }
 
   /**

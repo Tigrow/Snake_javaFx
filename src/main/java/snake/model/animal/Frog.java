@@ -16,7 +16,7 @@ import snake.model.animal.elements.frog.FrogBody;
 public class Frog<T extends FrogBody> implements Runnable {
   private T body;
   private int sleep;
-  private final World world;
+  protected final World world;
   private boolean alive;
 
   /**
