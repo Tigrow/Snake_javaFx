@@ -17,9 +17,9 @@ public class Main extends Application {
   private static boolean problemProperties;
 
   /**
-   * Initialize java program.
+   * Инициализация программы.
    *
-   * @param args - args which user send to program.
+   * @param args - агрументы которые приходят в программу.
    */
   public static void main(String[] args) {
     properties = new Properties();

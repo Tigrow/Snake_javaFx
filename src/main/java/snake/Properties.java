@@ -42,7 +42,7 @@ public class Properties {
     return problem;
   }
 
-  private void parseOne(String arg) throws NumberFormatException, NullPointerException {
+  private void parseOne(String arg) {
     if (arg.contains("-width=")) {
       String width = arg.split("=")[1];
       widthSize = Integer.parseInt(width);

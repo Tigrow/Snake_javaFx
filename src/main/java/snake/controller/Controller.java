@@ -22,8 +22,9 @@ public class Controller implements Observer {
   private boolean gameLoaded;
 
   /**
-   *  Конструктов в который в качестве параметров поступает @param mainView,
+   * Конструктов в который в качестве параметров поступает @param mainView,
    * и инициализируется наблюдение за ним.
+   *
    * @param mainView - объект преставления.
    */
   public Controller(@NotNull ObservableView mainView) {
@@ -61,8 +62,8 @@ public class Controller implements Observer {
   }
 
   private void pauseGame() {
-      mainView.gamePaused();
-      world.pauseGame();
+    mainView.gamePaused();
+    world.pauseGame();
   }
 
   private void startGame() {
@@ -93,12 +94,15 @@ public class Controller implements Observer {
     if (world != null) {
       world.deleteObservers();
     }
+
     world = new World(Main.properties);
     world.addObserver(this);
-    mainView.loadScreen(Main.properties.getWidthSize(), Main.properties.getHeightSize());
     world.loadGame();
+
+    mainView.loadScreen(Main.properties.getWidthSize(), Main.properties.getHeightSize());
     mainView.setScore(world.getScore());
     mainView.newGame();
+
     gameLoaded = true;
   }
 }
