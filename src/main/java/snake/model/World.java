@@ -178,12 +178,12 @@ public class World extends ObservableWorld {
         frogs.get(elementByPosition).kill();
         snake.addBodySegment();
         scorePlus();
-      } else if (elementByPosition instanceof SnakeBody) {
+      } /*else if (elementByPosition instanceof SnakeBody) {
         alive = false;
         running = false;
         setChanged();
         notifyObservers(WorldChange.GAME_OVER);
-      } else if (elementByPosition instanceof RedFrogBody) {
+      }*/ else if (elementByPosition instanceof RedFrogBody) {
         frogs.get(elementByPosition).kill();
         snake.deleteBodySegment();
         scorePlus();
@@ -235,6 +235,47 @@ public class World extends ObservableWorld {
       freePosition.add(new Point(position.x, position.y + 1));
     }
     if (getElementByPosition(position.x, position.y - 1) == null) {
+      freePosition.add(new Point(position.x, position.y - 1));
+    }
+    return freePosition;
+  }
+
+  public List<Point> getFreePositionWithoutFrog(Point position) {
+    List<Point> freePosition = new ArrayList<>();
+    if (getElementByPosition(position.x - 1, position.y) == null
+        || getElementByPosition(position.x - 1, position.y) instanceof FrogBody) {
+      freePosition.add(new Point(position.x - 1, position.y));
+    }
+    if (getElementByPosition(position.x + 1, position.y) == null
+        || getElementByPosition(position.x + 1, position.y) instanceof FrogBody) {
+      freePosition.add(new Point(position.x + 1, position.y));
+    }
+    if (getElementByPosition(position.x, position.y + 1) == null
+        || getElementByPosition(position.x, position.y + 1) instanceof FrogBody) {
+      freePosition.add(new Point(position.x, position.y + 1));
+    }
+    if (getElementByPosition(position.x, position.y - 1) == null
+        || getElementByPosition(position.x, position.y - 1) instanceof FrogBody) {
+      freePosition.add(new Point(position.x, position.y - 1));
+    }
+    return freePosition;
+  }
+  public List<Point> getFreePositionWithoutFrogAndBody(Point position) {
+    List<Point> freePosition = new ArrayList<>();
+    if (getElementByPosition(position.x - 1, position.y) == null
+        || !(getElementByPosition(position.x - 1, position.y) instanceof Wall)) {
+      freePosition.add(new Point(position.x - 1, position.y));
+    }
+    if (getElementByPosition(position.x + 1, position.y) == null
+        || !(getElementByPosition(position.x + 1, position.y) instanceof Wall)) {
+      freePosition.add(new Point(position.x + 1, position.y));
+    }
+    if (getElementByPosition(position.x, position.y + 1) == null
+        || !(getElementByPosition(position.x, position.y + 1) instanceof Wall)) {
+      freePosition.add(new Point(position.x, position.y + 1));
+    }
+    if (getElementByPosition(position.x, position.y - 1) == null
+        || !(getElementByPosition(position.x, position.y - 1) instanceof Wall)) {
       freePosition.add(new Point(position.x, position.y - 1));
     }
     return freePosition;

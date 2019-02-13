@@ -2,6 +2,8 @@ package snake.model.animal;
 
 import java.awt.Point;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 import snake.Properties;
 import snake.model.Direction;
@@ -67,10 +69,13 @@ public class Snake implements Runnable {
    */
   public void addBodySegment() {
     addBodyCount++;
+    System.out.println("snakeSize = " + snakeBodyList.size());
+
   }
 
   /**
    * Установка изменения направления.
+   *
    * @param direction - направление.
    */
   public void setChangeDirection(Direction direction) {
@@ -85,12 +90,37 @@ public class Snake implements Runnable {
       world.clearPosition(snakeBodyList.getLast().getPosition());
       snakeBodyList.removeLast();
       world.moveElement(snakeTail, snakeBodyList.getLast().getPosition());
+      System.out.println("snakeSize = " + snakeBodyList.size());
     }
   }
 
   private void move() {
-    changeDirection();
+//    changeDirection();
+    intellictualMove();
     moveHead();
+  }
+
+  private void intellictualMove() {
+    Random random = new Random();
+    List<Point> points = world.getFreePositionWithoutFrog(snakeHead.getPosition());
+    if (points.size() != 0) {
+      Point point = points.get(random.nextInt(points.size()));
+      dir = new Point(point.x - snakeHead.getPosition().x, point.y - snakeHead.getPosition().y);
+    } else {
+      points = world.getFreePositionWithoutFrogAndBody(snakeHead.getPosition());
+      Point point = points.get(random.nextInt(points.size()));
+      dir = new Point(point.x - snakeHead.getPosition().x, point.y - snakeHead.getPosition().y);
+    }
+//    if (point.x == snakeHead.getPosition().x && point.y > snakeHead.getPosition().y ||
+//        point.y == snakeHead.getPosition().y && point.x > snakeHead.getPosition().x) {
+//
+//    } else if (point.x == snakeHead.getPosition().x && point.y < snakeHead.getPosition().y ||
+//               point.y == snakeHead.getPosition().y && point.x < snakeHead.getPosition().x) {
+//      changeDirection = Direction.RIGHT;
+//    } else {
+//      changeDirection = Direction.NONE;
+//    }
+    //changeDirection();
   }
 
   private void moveHead() {
