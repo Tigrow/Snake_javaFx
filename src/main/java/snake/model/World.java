@@ -2,10 +2,15 @@ package snake.model;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.sun.istack.internal.NotNull;
+import javafx.scene.paint.Color;
 import snake.Properties;
 import snake.model.animal.BrainyFrog;
 import snake.model.animal.Frog;
@@ -17,17 +22,18 @@ import snake.model.animal.elements.frog.FrogBody;
 import snake.model.animal.elements.frog.GreenFrogBody;
 import snake.model.animal.elements.snake.SnakeBody;
 import snake.model.animal.elements.snake.SnakeHead;
+import snake.model.animal.elements.snake.SnakeTail;
 
 /**
  * Основной класс описывающий весь мир игры змейка.
  */
 public class World extends ObservableWorld {
   private final Element[][] elements;
-  private Snake snake;
+  private List<Snake> snakes = new ArrayList<>();
+  private List<Thread> snakeThreads = new ArrayList<>();
   private boolean running = false;
   private boolean paused = false;
   private HashMap<FrogBody, Frog> frogs;
-  private Thread snakeThread;
   private List<Thread> frogThreads;
   private Properties properties;
   private int score = 0;
@@ -46,9 +52,30 @@ public class World extends ObservableWorld {
 
   @Override
   public void loadGame() {
-    snake = new Snake(properties, this);
+    Snake snake = new Snake(properties, this, 0, Color.AQUAMARINE);
+    Thread snakeThread = new Thread(snake);
+    snakeThread.setDaemon(true);
+    snakes.add(snake);
+    snakeThreads.add(snakeThread);
+
+    snake = new Snake(properties, this, 5, Color.BLUE);
     snakeThread = new Thread(snake);
     snakeThread.setDaemon(true);
+    snakes.add(snake);
+    snakeThreads.add(snakeThread);
+
+    snake = new Snake(properties, this, 10, Color.BISQUE);
+    snakeThread = new Thread(snake);
+    snakeThread.setDaemon(true);
+    snakes.add(snake);
+    snakeThreads.add(snakeThread);
+
+    snake = new Snake(properties, this, 15, Color.CYAN);
+    snakeThread = new Thread(snake);
+    snakeThread.setDaemon(true);
+    snakes.add(snake);
+    snakeThreads.add(snakeThread);
+
     addFrogs();
   }
 
@@ -56,7 +83,7 @@ public class World extends ObservableWorld {
     for (int i = 0; i < properties.getGreenFrogNumber(); i++) {
       FrogBody frogBody = new GreenFrogBody();
       BrainyFrog<FrogBody> frog = new BrainyFrog<>(frogBody, properties.getSnakeSleep() * 2,
-              this, snake.getSnakeHeadPosition(), properties.getFrogIq());
+              this, snakes.get(0).getSnakeHead().getPosition(), properties.getFrogIq());
       Thread frogThread = new Thread(frog);
       frogThread.setDaemon(true);
       frogThreads.add(frogThread);
@@ -91,15 +118,14 @@ public class World extends ObservableWorld {
       return;
     }
     running = true;
-    snakeThread.start();
-    for (Thread frogThread : frogThreads) {
-      frogThread.start();
-    }
+    snakes.forEach(Snake::deleteBodySegment);
+    snakeThreads.forEach(Thread::start);
+    frogThreads.forEach(Thread::start);
   }
 
   @Override
   public void changeDirection(Direction direction) {
-    snake.setChangeDirection(direction);
+    //snake.setChangeDirection(direction);
   }
 
   @Override
@@ -169,6 +195,7 @@ public class World extends ObservableWorld {
     boolean alive = true;
     Element elementByPosition = getElementByPosition(newPosition);
     if (element instanceof SnakeHead) {
+
       if (elementByPosition instanceof Wall) {
         alive = false;
         running = false;
@@ -176,16 +203,24 @@ public class World extends ObservableWorld {
         notifyObservers(WorldChange.GAME_OVER);
       } else if (elementByPosition instanceof GreenFrogBody) {
         frogs.get(elementByPosition).kill();
-        snake.addBodySegment();
+        snakes.forEach(snake -> {
+          if (snake.getSnakeHead().equals(element)) {
+            snake.addBodySegment();
+          }
+        });
         scorePlus();
-      } /*else if (elementByPosition instanceof SnakeBody) {
+      } else if (elementByPosition instanceof SnakeBody) {
         alive = false;
         running = false;
         setChanged();
         notifyObservers(WorldChange.GAME_OVER);
-      }*/ else if (elementByPosition instanceof RedFrogBody) {
+      } else if (elementByPosition instanceof RedFrogBody) {
         frogs.get(elementByPosition).kill();
-        snake.deleteBodySegment();
+        snakes.forEach(snake -> {
+          if (snake.getSnakeHead().equals(element)) {
+            snake.deleteBodySegment();
+          }
+        });
         scorePlus();
         scorePlus();
       }
@@ -243,41 +278,31 @@ public class World extends ObservableWorld {
   public List<Point> getFreePositionWithoutFrog(Point position) {
     List<Point> freePosition = new ArrayList<>();
     if (getElementByPosition(position.x - 1, position.y) == null
-        || getElementByPosition(position.x - 1, position.y) instanceof FrogBody) {
+        || getElementByPosition(position.x - 1, position.y) instanceof FrogBody
+        || getElementByPosition(position.x - 1, position.y) instanceof SnakeTail) {
       freePosition.add(new Point(position.x - 1, position.y));
     }
     if (getElementByPosition(position.x + 1, position.y) == null
-        || getElementByPosition(position.x + 1, position.y) instanceof FrogBody) {
+        || getElementByPosition(position.x + 1, position.y) instanceof FrogBody
+        || getElementByPosition(position.x + 1, position.y) instanceof SnakeTail) {
       freePosition.add(new Point(position.x + 1, position.y));
     }
     if (getElementByPosition(position.x, position.y + 1) == null
-        || getElementByPosition(position.x, position.y + 1) instanceof FrogBody) {
+        || getElementByPosition(position.x, position.y + 1) instanceof FrogBody
+        || getElementByPosition(position.x, position.y + 1) instanceof SnakeTail) {
       freePosition.add(new Point(position.x, position.y + 1));
     }
     if (getElementByPosition(position.x, position.y - 1) == null
-        || getElementByPosition(position.x, position.y - 1) instanceof FrogBody) {
+        || getElementByPosition(position.x, position.y - 1) instanceof FrogBody
+        || getElementByPosition(position.x, position.y - 1) instanceof SnakeTail) {
       freePosition.add(new Point(position.x, position.y - 1));
     }
     return freePosition;
   }
-  public List<Point> getFreePositionWithoutFrogAndBody(Point position) {
-    List<Point> freePosition = new ArrayList<>();
-    if (getElementByPosition(position.x - 1, position.y) == null
-        || !(getElementByPosition(position.x - 1, position.y) instanceof Wall)) {
-      freePosition.add(new Point(position.x - 1, position.y));
-    }
-    if (getElementByPosition(position.x + 1, position.y) == null
-        || !(getElementByPosition(position.x + 1, position.y) instanceof Wall)) {
-      freePosition.add(new Point(position.x + 1, position.y));
-    }
-    if (getElementByPosition(position.x, position.y + 1) == null
-        || !(getElementByPosition(position.x, position.y + 1) instanceof Wall)) {
-      freePosition.add(new Point(position.x, position.y + 1));
-    }
-    if (getElementByPosition(position.x, position.y - 1) == null
-        || !(getElementByPosition(position.x, position.y - 1) instanceof Wall)) {
-      freePosition.add(new Point(position.x, position.y - 1));
-    }
-    return freePosition;
+
+  public FrogBody getRandomFrog() {
+    List<Frog> frogList = new ArrayList<>(frogs.values());
+    Random random = new Random();
+    return frogList.get(random.nextInt(frogList.size())).getFrogBody();
   }
 }

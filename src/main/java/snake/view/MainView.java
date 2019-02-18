@@ -17,6 +17,7 @@ import snake.model.animal.elements.Element;
 import snake.model.animal.elements.frog.RedFrogBody;
 import snake.model.animal.elements.frog.GreenFrogBody;
 import snake.model.animal.elements.snake.SnakeBody;
+import snake.model.animal.elements.snake.SnakeDetails;
 import snake.model.animal.elements.snake.SnakeHead;
 import snake.model.animal.elements.snake.SnakeTail;
 
@@ -25,7 +26,7 @@ import snake.model.animal.elements.snake.SnakeTail;
  */
 public class MainView extends ObservableView {
 
-  private static final int CELL_SIZE = 30;
+  private static final int CELL_SIZE = 10;
   private static final int HALF_CELL_SIZE = CELL_SIZE / 2;
   private static final int HEAD_SNAKE_RADIUS = CELL_SIZE / 2;
   private static final int BODY_SNAKE_RADIUS = CELL_SIZE / 3;
@@ -49,13 +50,13 @@ public class MainView extends ObservableView {
     alert.setTitle("Error in params");
     alert.setHeaderText("you have a problem in the parameters");
     String errorMessage = "parameters corrected to \n"
-            + "Snake size =" + Main.properties.getSnakeSize() + "\n"
-            + "Green frog number = " + Main.properties.getGreenFrogNumber() + "\n"
-            + "Red frog number = " + Main.properties.getRedFrogNumber() + "\n"
-            + "Snake sleep = " + Main.properties.getSnakeSleep() + "\n"
-            + "Width size = " + Main.properties.getWidthSize() + "\n"
-            + "Height size = " + Main.properties.getHeightSize() + "\n"
-            + "Frog iq = " + Main.properties.getFrogIq();
+                          + "Snake size =" + Main.properties.getSnakeSize() + "\n"
+                          + "Green frog number = " + Main.properties.getGreenFrogNumber() + "\n"
+                          + "Red frog number = " + Main.properties.getRedFrogNumber() + "\n"
+                          + "Snake sleep = " + Main.properties.getSnakeSleep() + "\n"
+                          + "Width size = " + Main.properties.getWidthSize() + "\n"
+                          + "Height size = " + Main.properties.getHeightSize() + "\n"
+                          + "Frog iq = " + Main.properties.getFrogIq();
     alert.setContentText(errorMessage);
     alert.showAndWait();
   }
@@ -212,23 +213,23 @@ public class MainView extends ObservableView {
     if (element instanceof SnakeHead) {
       circle.setVisible(true);
       circle.setRadius(HEAD_SNAKE_RADIUS);
-      circle.setFill(Color.YELLOW);
+      circle.setFill(element.getColor());
     } else if (element instanceof SnakeTail) {
       circle.setVisible(true);
       circle.setRadius(TAIL_SNAKE_RADIUS);
-      circle.setFill(Color.YELLOW);
+      circle.setFill(element.getColor());
     } else if (element instanceof SnakeBody) {
       circle.setVisible(true);
       circle.setRadius(BODY_SNAKE_RADIUS);
-      circle.setFill(Color.YELLOW);
+      circle.setFill(element.getColor());
     } else if (element instanceof GreenFrogBody) {
       circle.setVisible(true);
       circle.setRadius(BODY_FROG_RADIUS);
-      circle.setFill(Color.LIGHTGREEN);
+      circle.setFill(element.getColor());
     } else if (element instanceof RedFrogBody) {
       circle.setVisible(true);
       circle.setRadius(BODY_FROG_RADIUS);
-      circle.setFill(Color.RED);
+      circle.setFill(element.getColor());
     } else {
       circle.setVisible(false);
     }

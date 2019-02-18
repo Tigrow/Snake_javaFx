@@ -110,4 +110,8 @@ public class Properties {
   public int getRedFrogNumber() {
     return redFrogNumber;
   }
+
+  public void setSnakeSleep(int snakeSleep) {
+    this.snakeSleep = snakeSleep;
+  }
 }

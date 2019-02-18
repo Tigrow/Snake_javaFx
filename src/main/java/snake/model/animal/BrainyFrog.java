@@ -20,14 +20,11 @@ public class BrainyFrog<T extends FrogBody> extends Frog {
     super(frogBody, sleep, world);
     this.snakeHeadPosition = snakeHeadPosition;
     this.frogIq = iq;
-    comparator = new Comparator<Point>() {
-      @Override
-      public int compare(Point o1, Point o2) {
-        if (snakeHeadPosition.distance(o1) > snakeHeadPosition.distance(o2)) {
-          return (int) snakeHeadPosition.distance(o1);
-        } else {
-          return (int) snakeHeadPosition.distance(o2);
-        }
+    comparator = (o1, o2) -> {
+      if (snakeHeadPosition.distance(o1) > snakeHeadPosition.distance(o2)) {
+        return (int) snakeHeadPosition.distance(o1);
+      } else {
+        return (int) snakeHeadPosition.distance(o2);
       }
     };
   }
