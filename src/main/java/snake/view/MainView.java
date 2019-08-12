@@ -1,7 +1,6 @@
 package snake.view;
 
 import javafx.application.Platform;
-
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -14,10 +13,9 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import snake.Main;
 import snake.model.animal.elements.Element;
-import snake.model.animal.elements.frog.RedFrogBody;
 import snake.model.animal.elements.frog.GreenFrogBody;
+import snake.model.animal.elements.frog.RedFrogBody;
 import snake.model.animal.elements.snake.SnakeBody;
-import snake.model.animal.elements.snake.SnakeDetails;
 import snake.model.animal.elements.snake.SnakeHead;
 import snake.model.animal.elements.snake.SnakeTail;
 
@@ -26,7 +24,7 @@ import snake.model.animal.elements.snake.SnakeTail;
  */
 public class MainView extends ObservableView {
 
-  private static final int CELL_SIZE = 10;
+  private static final int CELL_SIZE = 4;
   private static final int HALF_CELL_SIZE = CELL_SIZE / 2;
   private static final int HEAD_SNAKE_RADIUS = CELL_SIZE / 2;
   private static final int BODY_SNAKE_RADIUS = CELL_SIZE / 3;

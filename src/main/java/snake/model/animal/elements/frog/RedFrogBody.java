@@ -13,4 +13,9 @@ public class RedFrogBody extends FrogBody {
   public RedFrogBody() {
     this.color = Color.RED;
   }
+
+  @Override
+  public void setDefaultColor() {
+    this.color = Color.RED;
+  }
 }

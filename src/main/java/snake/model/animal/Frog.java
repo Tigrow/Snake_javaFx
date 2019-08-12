@@ -1,11 +1,11 @@
 package snake.model.animal;
 
-import java.awt.Point;
-import java.util.List;
-import java.util.Random;
-
 import snake.model.World;
 import snake.model.animal.elements.frog.FrogBody;
+
+import java.awt.*;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Класс характеризующий поведение лягушки, и реализующий
@@ -47,6 +47,7 @@ public class Frog<T extends FrogBody> implements Runnable {
    */
   public void kill() {
     alive = false;
+    body.setDefaultColor();
   }
 
   private void resetPosition() {
@@ -91,5 +92,9 @@ public class Frog<T extends FrogBody> implements Runnable {
         e.printStackTrace();
       }
     }
+  }
+
+  public boolean isAlive() {
+    return alive;
   }
 }

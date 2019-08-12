@@ -1,8 +1,8 @@
 package snake.model.animal.elements.frog;
 
-import java.awt.Point;
-
 import snake.model.animal.elements.Element;
+
+import java.awt.*;
 
 /**
  * Абстрактный класс характеризующий абстрактную сущность тело лягушки
@@ -24,4 +24,6 @@ public abstract class FrogBody extends Element {
   FrogBody() {
     super();
   }
+
+  public abstract void setDefaultColor();
 }

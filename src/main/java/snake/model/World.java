@@ -1,14 +1,5 @@
 package snake.model;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.sun.istack.internal.NotNull;
 import javafx.scene.paint.Color;
 import snake.Properties;
@@ -16,13 +7,20 @@ import snake.model.animal.BrainyFrog;
 import snake.model.animal.Frog;
 import snake.model.animal.Snake;
 import snake.model.animal.elements.Element;
-import snake.model.animal.elements.frog.RedFrogBody;
 import snake.model.animal.elements.Wall;
 import snake.model.animal.elements.frog.FrogBody;
 import snake.model.animal.elements.frog.GreenFrogBody;
+import snake.model.animal.elements.frog.RedFrogBody;
 import snake.model.animal.elements.snake.SnakeBody;
 import snake.model.animal.elements.snake.SnakeHead;
 import snake.model.animal.elements.snake.SnakeTail;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * Основной класс описывающий весь мир игры змейка.
@@ -33,8 +31,8 @@ public class World extends ObservableWorld {
   private List<Thread> snakeThreads = new ArrayList<>();
   private boolean running = false;
   private boolean paused = false;
-  private HashMap<FrogBody, Frog> frogs;
-  private List<Thread> frogThreads;
+  private HashMap<FrogBody, Frog> frogs = new HashMap<>();
+  private List<Thread> frogThreads = new ArrayList<>();
   private Properties properties;
   private int score = 0;
 
@@ -46,8 +44,6 @@ public class World extends ObservableWorld {
   public World(Properties properties) {
     this.properties = properties;
     elements = new Element[properties.getWidthSize()][properties.getHeightSize()];
-    frogs = new HashMap<>();
-    frogThreads = new ArrayList<>();
   }
 
   @Override
@@ -58,7 +54,7 @@ public class World extends ObservableWorld {
     snakes.add(snake);
     snakeThreads.add(snakeThread);
 
-    snake = new Snake(properties, this, 5, Color.BLUE);
+/*    snake = new Snake(properties, this, 5, Color.BLUE);
     snakeThread = new Thread(snake);
     snakeThread.setDaemon(true);
     snakes.add(snake);
@@ -75,6 +71,18 @@ public class World extends ObservableWorld {
     snakeThread.setDaemon(true);
     snakes.add(snake);
     snakeThreads.add(snakeThread);
+
+    snake = new Snake(properties, this, 20, Color.WHITESMOKE);
+    snakeThread = new Thread(snake);
+    snakeThread.setDaemon(true);
+    snakes.add(snake);
+    snakeThreads.add(snakeThread);
+
+    snake = new Snake(properties, this, 25, Color.SEAGREEN);
+    snakeThread = new Thread(snake);
+    snakeThread.setDaemon(true);
+    snakes.add(snake);
+    snakeThreads.add(snakeThread);*/
 
     addFrogs();
   }
@@ -118,7 +126,6 @@ public class World extends ObservableWorld {
       return;
     }
     running = true;
-    snakes.forEach(Snake::deleteBodySegment);
     snakeThreads.forEach(Thread::start);
     frogThreads.forEach(Thread::start);
   }
@@ -196,26 +203,30 @@ public class World extends ObservableWorld {
     Element elementByPosition = getElementByPosition(newPosition);
     if (element instanceof SnakeHead) {
 
-      if (elementByPosition instanceof Wall) {
+      if (elementByPosition instanceof Wall || elementByPosition instanceof SnakeBody) {
         alive = false;
-        running = false;
         setChanged();
-        notifyObservers(WorldChange.GAME_OVER);
+//        running = false;
+//        notifyObservers(WorldChange.GAME_OVER);
+        snakes.forEach(snake -> {
+          if (snake.getSnakeHead().equals(element)) {
+            snake.kill();
+          }
+        });
       } else if (elementByPosition instanceof GreenFrogBody) {
-        frogs.get(elementByPosition).kill();
+        if (frogs.containsKey(elementByPosition)) {
+          frogs.get(elementByPosition).kill();
+        }
         snakes.forEach(snake -> {
           if (snake.getSnakeHead().equals(element)) {
             snake.addBodySegment();
           }
         });
         scorePlus();
-      } else if (elementByPosition instanceof SnakeBody) {
-        alive = false;
-        running = false;
-        setChanged();
-        notifyObservers(WorldChange.GAME_OVER);
       } else if (elementByPosition instanceof RedFrogBody) {
-        frogs.get(elementByPosition).kill();
+        if (frogs.containsKey(elementByPosition)) {
+          frogs.get(elementByPosition).kill();
+        }
         snakes.forEach(snake -> {
           if (snake.getSnakeHead().equals(element)) {
             snake.deleteBodySegment();
@@ -300,9 +311,41 @@ public class World extends ObservableWorld {
     return freePosition;
   }
 
-  public FrogBody getRandomFrog() {
-    List<Frog> frogList = new ArrayList<>(frogs.values());
-    Random random = new Random();
-    return frogList.get(random.nextInt(frogList.size())).getFrogBody();
+  public FrogBody getNearFrog(Point point) {
+    return frogs.values()
+            .stream()
+            .filter(Frog::isAlive)
+            .min((f1, f2) -> (int) (f1.getFrogBody().getPosition().distance(point) - f2.getFrogBody().getPosition().distance(point))).get().getFrogBody();
+  }
+
+  public FrogBody getNearFrog2(Point point) {
+    long time = System.currentTimeMillis();
+    Queue<Point> queue = new LinkedList<>();
+    List<Point> points = new ArrayList<>();
+    queue.add(point);
+    points.add(point);
+    while (queue.size() != 0) {
+      Point pos = queue.remove();
+      int x = 1;
+      int y = 0;
+      for (int i = 0; i < 4; i++) {
+        int x1 = y;
+        int y1 = x * -1;
+        x = x1;
+        y = y1;
+        Point newPoint = new Point(pos.x + x, pos.y + y);
+        if (canMoveTo(newPoint.x, newPoint.y) && !points.contains(newPoint)) {
+          if (elements[newPoint.x][newPoint.y] == null) {
+            queue.add(newPoint);
+            points.add(newPoint);
+          } else if (elements[newPoint.x][newPoint.y] instanceof FrogBody) {
+            System.out.println(System.currentTimeMillis() - time);
+            return (FrogBody) elements[newPoint.x][newPoint.y];
+          }
+        }
+      }
+    }
+    System.out.println(System.currentTimeMillis() - time);
+    return null;
   }
 }
