@@ -11,9 +11,7 @@ import snake.model.animal.elements.snake.SnakeHead;
 import snake.model.animal.elements.snake.SnakeTail;
 
 import java.awt.*;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -120,8 +118,6 @@ public class Snake implements Runnable {
 //    changeDirection();
     if (frogBody == null) {
       frogBody = world.getNearFrog(snakeHead.getPosition());
-    } else {
-      frogBody.setColor(Color.SNOW);
     }
     intellectualMove();
     moveHead();

@@ -16,11 +16,8 @@ import snake.model.animal.elements.snake.SnakeHead;
 import snake.model.animal.elements.snake.SnakeTail;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.Queue;
 
 /**
  * Основной класс описывающий весь мир игры змейка.
@@ -28,11 +25,10 @@ import java.util.Queue;
 public class World extends ObservableWorld {
   private final Element[][] elements;
   private List<Snake> snakes = new ArrayList<>();
-  private List<Thread> snakeThreads = new ArrayList<>();
   private boolean running = false;
   private boolean paused = false;
   private HashMap<FrogBody, Frog> frogs = new HashMap<>();
-  private List<Thread> frogThreads = new ArrayList<>();
+  private List<Thread> threads = new ArrayList<>();
   private Properties properties;
   private int score = 0;
 
@@ -48,42 +44,13 @@ public class World extends ObservableWorld {
 
   @Override
   public void loadGame() {
-    Snake snake = new Snake(properties, this, 0, Color.AQUAMARINE);
-    Thread snakeThread = new Thread(snake);
-    snakeThread.setDaemon(true);
-    snakes.add(snake);
-    snakeThreads.add(snakeThread);
-
-/*    snake = new Snake(properties, this, 5, Color.BLUE);
-    snakeThread = new Thread(snake);
-    snakeThread.setDaemon(true);
-    snakes.add(snake);
-    snakeThreads.add(snakeThread);
-
-    snake = new Snake(properties, this, 10, Color.BISQUE);
-    snakeThread = new Thread(snake);
-    snakeThread.setDaemon(true);
-    snakes.add(snake);
-    snakeThreads.add(snakeThread);
-
-    snake = new Snake(properties, this, 15, Color.CYAN);
-    snakeThread = new Thread(snake);
-    snakeThread.setDaemon(true);
-    snakes.add(snake);
-    snakeThreads.add(snakeThread);
-
-    snake = new Snake(properties, this, 20, Color.WHITESMOKE);
-    snakeThread = new Thread(snake);
-    snakeThread.setDaemon(true);
-    snakes.add(snake);
-    snakeThreads.add(snakeThread);
-
-    snake = new Snake(properties, this, 25, Color.SEAGREEN);
-    snakeThread = new Thread(snake);
-    snakeThread.setDaemon(true);
-    snakes.add(snake);
-    snakeThreads.add(snakeThread);*/
-
+    Random rand = new Random();
+    for (int i = 0; i<=0; i++){
+      Snake snake = new Snake(properties, this, 5*i,
+              Color.color(rand.nextDouble(), rand.nextDouble(), rand.nextDouble()));
+      snakes.add(snake);
+      addThread(snake);
+    }
     addFrogs();
   }
 
@@ -92,18 +59,14 @@ public class World extends ObservableWorld {
       FrogBody frogBody = new GreenFrogBody();
       BrainyFrog<FrogBody> frog = new BrainyFrog<>(frogBody, properties.getSnakeSleep() * 2,
               this, snakes.get(0).getSnakeHead().getPosition(), properties.getFrogIq());
-      Thread frogThread = new Thread(frog);
-      frogThread.setDaemon(true);
-      frogThreads.add(frogThread);
       frogs.put(frogBody, frog);
+      addThread(frog);
     }
     for (int i = 0; i < properties.getRedFrogNumber(); i++) {
       FrogBody frogBody = new RedFrogBody();
       Frog<FrogBody> frog = new Frog<>(frogBody, properties.getSnakeSleep() * 2, this);
-      Thread frogThread = new Thread(frog);
-      frogThread.setDaemon(true);
-      frogThreads.add(frogThread);
       frogs.put(frogBody, frog);
+      addThread(frog);
     }
   }
 
@@ -126,8 +89,7 @@ public class World extends ObservableWorld {
       return;
     }
     running = true;
-    snakeThreads.forEach(Thread::start);
-    frogThreads.forEach(Thread::start);
+    threads.forEach(Thread::start);
   }
 
   @Override
@@ -159,7 +121,7 @@ public class World extends ObservableWorld {
    * @return - если перемещение произошло, то возвращает true
    */
   public boolean moveElement(@NotNull Element element, Point newPosition) {
-    synchronized (elements) {
+//    synchronized (elements) {
       boolean move = collision(element, newPosition);
       if (move) {
         if (elements[element.getPosition().x][element.getPosition().y] == element) {
@@ -172,7 +134,7 @@ public class World extends ObservableWorld {
         notifyObservers(WorldChange.ELEMENT_MOVED);
       }
       return move;
-    }
+//    }
   }
 
   public void clearPosition(Point position) {
@@ -222,7 +184,7 @@ public class World extends ObservableWorld {
             snake.addBodySegment();
           }
         });
-        scorePlus();
+        scorePlus(1);
       } else if (elementByPosition instanceof RedFrogBody) {
         if (frogs.containsKey(elementByPosition)) {
           frogs.get(elementByPosition).kill();
@@ -232,15 +194,14 @@ public class World extends ObservableWorld {
             snake.deleteBodySegment();
           }
         });
-        scorePlus();
-        scorePlus();
+        scorePlus(2);
       }
     }
     return alive;
   }
 
-  private void scorePlus() {
-    score++;
+  private void scorePlus(int additional) {
+    score = score + additional;
     setChanged();
     notifyObservers(WorldChange.SCORE_CHANGED);
   }
@@ -315,7 +276,9 @@ public class World extends ObservableWorld {
     return frogs.values()
             .stream()
             .filter(Frog::isAlive)
-            .min((f1, f2) -> (int) (f1.getFrogBody().getPosition().distance(point) - f2.getFrogBody().getPosition().distance(point))).get().getFrogBody();
+            .min((f1, f2) -> (int) (f1.getFrogBody().getPosition().distance(point) - f2.getFrogBody().getPosition().distance(point)))
+            .get()
+            .getFrogBody();
   }
 
   public FrogBody getNearFrog2(Point point) {
@@ -347,5 +310,13 @@ public class World extends ObservableWorld {
     }
     System.out.println(System.currentTimeMillis() - time);
     return null;
+  }
+
+  private void addThread(Runnable runnable){
+    Thread thread = new Thread(runnable);
+    thread.setDaemon(true);
+    thread.setName("Thread_" + runnable.getClass().getSimpleName() + "_" + runnable.hashCode());
+    threads.add(thread);
+
   }
 }

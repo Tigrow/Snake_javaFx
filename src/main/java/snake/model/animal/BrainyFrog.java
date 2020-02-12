@@ -1,10 +1,7 @@
 package snake.model.animal;
 
 import java.awt.Point;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import snake.model.World;
 import snake.model.animal.elements.frog.FrogBody;
@@ -43,13 +40,15 @@ public class BrainyFrog<T extends FrogBody> extends Frog {
     Random random = new Random();
     synchronized (world) {
       List<Point> pointList = world.getFreePosition(getFrogBody().getPosition());
-      Collections.sort(pointList, comparator);
+      List<Point> removePointList = new ArrayList<>();
+      pointList.sort(comparator);
       if (pointList.size() > 0) {
-        for (int i = 0; i < pointList.size(); i++) {
-          if (snakeHeadPosition.distance(pointList.get(0)) > snakeHeadPosition.distance(pointList.get(i))) {
-            pointList.remove(i);
+        for (Point point : pointList) {
+          if (snakeHeadPosition.distance(pointList.get(0)) > snakeHeadPosition.distance(point)) {
+            removePointList.add(point);
           }
         }
+        pointList.removeAll(removePointList);
         world.moveElement(getFrogBody(), pointList.get(random.nextInt(pointList.size())));
       }
     }
